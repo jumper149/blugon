@@ -1,0 +1,12 @@
+#!/bin/python
+
+import argparse
+
+version = "0"
+parser = argparse.ArgumentParser(description="A blue light filter written in 'Python' using 'XRandR' as backend")
+parser.add_argument('-v', '--version', action='store_true', dest='flag_version', help="print version and exit")
+
+args = parser.parse_args()
+
+if(args.flag_version):
+    print("blugon " + version)
