@@ -1,12 +1,38 @@
 #!/bin/python
 
 import argparse
+import time
+import math
+import subprocess
 
-version = "0"
-parser = argparse.ArgumentParser(description="A blue light filter written in 'Python' using 'XRandR' as backend")
-parser.add_argument('-v', '--version', action='store_true', dest='flag_version', help="print version and exit")
+VERSION = "0"
+INTERVAL = 1
+
+parser = argparse.ArgumentParser(prog='blugon', description="A blue light filter written in 'Python' using 'XRandR' as backend.")
+
+parser.add_argument('-v', '--version', action='store_true', dest='version', help='print version and exit')
+parser.add_argument('-i', '--interval', nargs='?', dest='interval', type=float, const=INTERVAL, default=INTERVAL, help='set %(dest)s in seconds (default: 120)')
 
 args = parser.parse_args()
 
-if(args.flag_version):
-    print("blugon " + version)
+if(args.version):
+    print("blugon " + VERSION)
+    exit()
+
+INTERVAL = math.ceil(args.interval)
+
+
+
+def call_xgamma(red_gamma, green_gamma, blue_gamma):
+    str_red_gamma = str(red_gamma)
+    str_green_gamma = str(green_gamma)
+    str_blue_gamma = str(blue_gamma)
+    subprocess.check_call(['xgamma', '-quiet', '-rgamma', str_red_gamma, '-ggamma', str_green_gamma, '-bgamma', str_blue_gamma])
+
+def main():
+    while(True):
+        call_xgamma(1.0, 1.0, 1.0)
+        time.sleep(INTERVAL)
+
+if __name__ == "__main__":
+    main()
