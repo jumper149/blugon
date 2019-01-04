@@ -1,0 +1,4 @@
+- function that calculates gamma values from config (efficiently?)
+- systemd service
+- command line wrapper
+- config file layout, parser
