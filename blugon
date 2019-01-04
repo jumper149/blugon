@@ -4,14 +4,21 @@ import argparse
 import time
 import math
 import subprocess
+import pathlib
 
-VERSION = "0"
-INTERVAL = 1
+VERSION = '0'
+INTERVAL = 120
+CONFIG_DIR = str(pathlib.Path.home()) + '/.config/blugon'
+
+#-----------------------------------------------------------------
 
 parser = argparse.ArgumentParser(prog='blugon', description="A blue light filter written in 'Python' using 'XRandR' as backend.")
 
 parser.add_argument('-v', '--version', action='store_true', dest='version', help='print version and exit')
-parser.add_argument('-i', '--interval', nargs='?', dest='interval', type=float, const=INTERVAL, default=INTERVAL, help='set %(dest)s in seconds (default: 120)')
+parser.add_argument('-i', '--interval', nargs='?', dest='interval', type=float, const=INTERVAL, default=INTERVAL, help='set %(dest)s in seconds (default: '+str(INTERVAL)+')')
+parser.add_argument('-c', '--config', nargs='?', dest='config_dir', type=str, const=CONFIG_DIR, default=CONFIG_DIR, help='set configuration directory (default: '+CONFIG_DIR+')')
+
+#-----------------------------------------------------------------
 
 args = parser.parse_args()
 
@@ -21,18 +28,49 @@ if(args.version):
 
 INTERVAL = math.ceil(args.interval)
 
+CONFIG_DIR = args.config_dir
+if(not CONFIG_DIR.endswith('/')):
+    CONFIG_DIR += '/'
+CONFIG_FILE_GAMMA = CONFIG_DIR + "gamma"
 
+#-----------------------------------------------------------------
+
+def read_gamma():
+    def line_to_list(line):
+        str_list = line.split()
+        if(not str_list): # empty line
+            return False
+        if(str_list[0].startswith('#')): # comment
+            return False
+        float_list = list(map(float, str_list)) # gamma values
+        return float_list
+    with open(CONFIG_FILE_GAMMA, 'r') as file_gamma:
+        unfiltered_gamma = list(map(line_to_list, file_gamma.read().splitlines()))
+    gamma = list(filter(lambda x : x, unfiltered_gamma))
+    return gamma
+
+def gamma_index():
+    time_struct = time.localtime()
+    minutes = 60 * time_struct.tm_hour + time_struct.tm_min
+    return minutes
 
 def call_xgamma(red_gamma, green_gamma, blue_gamma):
     str_red_gamma = str(red_gamma)
     str_green_gamma = str(green_gamma)
     str_blue_gamma = str(blue_gamma)
     subprocess.check_call(['xgamma', '-quiet', '-rgamma', str_red_gamma, '-ggamma', str_green_gamma, '-bgamma', str_blue_gamma])
+    return
+
+#-----------------------------------------------------------------
 
 def main():
-    while(True):
-        call_xgamma(1.0, 1.0, 1.0)
-        time.sleep(INTERVAL)
+    LIST_GAMMA = read_gamma()
+    print(LIST_GAMMA)
+    gamma_index()
+    #while(True):
+    #    call_xgamma(1.0, 1.0, 1.0)
+    #    time.sleep(INTERVAL)
+    #return
 
 if __name__ == "__main__":
     main()

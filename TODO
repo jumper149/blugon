@@ -2,3 +2,4 @@
 - systemd service
 - command line wrapper
 - config file layout, parser
+- tty compatible?
