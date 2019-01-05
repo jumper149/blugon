@@ -9,6 +9,7 @@ import pathlib
 VERSION = '0'
 INTERVAL = 120
 CONFIG_DIR = str(pathlib.Path.home()) + '/.config/blugon'
+SIMULATE = False
 
 #-----------------------------------------------------------------
 
@@ -17,6 +18,7 @@ parser = argparse.ArgumentParser(prog='blugon', description="A blue light filter
 parser.add_argument('-v', '--version', action='store_true', dest='version', help='print version and exit')
 parser.add_argument('-i', '--interval', nargs='?', dest='interval', type=float, const=INTERVAL, default=INTERVAL, help='set %(dest)s in seconds (default: '+str(INTERVAL)+')')
 parser.add_argument('-c', '--config', nargs='?', dest='config_dir', type=str, const=CONFIG_DIR, default=CONFIG_DIR, help='set configuration directory (default: '+CONFIG_DIR+')')
+parser.add_argument('-s', '--simulate', action='store_true', dest='simulate', help="simulate 'blugon' over one day and exit")
 
 #-----------------------------------------------------------------
 
@@ -32,6 +34,12 @@ CONFIG_DIR = args.config_dir
 if(not CONFIG_DIR.endswith('/')):
     CONFIG_DIR += '/'
 CONFIG_FILE_GAMMA = CONFIG_DIR + "gamma"
+
+SIMULATE = args.simulate
+
+#-----------------------------------------------------------------
+
+MAX_MINUTE = 24 * 60
 
 #-----------------------------------------------------------------
 
@@ -66,7 +74,7 @@ def read_gamma():
     minutes = (list(map(pop_first, gamma)))
     return gamma, minutes
 
-def minute():
+def get_minute():
     time_struct = time.localtime()
     minute = 60 * time_struct.tm_hour + time_struct.tm_min + time_struct.tm_sec / 60
     return minute
@@ -75,16 +83,16 @@ def call_xgamma(red_gamma, green_gamma, blue_gamma):
     str_red_gamma = str(red_gamma)
     str_green_gamma = str(green_gamma)
     str_blue_gamma = str(blue_gamma)
+    #print(red_gamma, green_gamma, blue_gamma)
     subprocess.check_call(['xgamma', '-quiet', '-rgamma', str_red_gamma, '-ggamma', str_green_gamma, '-bgamma', str_blue_gamma])
     return
 
 def calc_gamma(minute, list_minutes, list_gamma):
     next_index = list_minutes.index(next((x for x in list_minutes if x >= minute), list_minutes[0]))
     next_minute = list_minutes[next_index]
-    if(next_index > 0):
-        prev_minute = list_minutes[next_index - 1]
-    else:
-        prev_minute = list_minutes[next_index - 1] - 24 * 60
+    prev_minute = list_minutes[next_index - 1]
+    if(next_minute < prev_minute):
+        next_minute += MAX_MINUTE
 
     def inbetween_gamma(next_gamma, prev_gamma):
         diff_gamma = next_gamma - prev_gamma
@@ -108,21 +116,43 @@ def calc_gamma(minute, list_minutes, list_gamma):
     green_gamma = inbetween_gamma(next_green, prev_green)
     blue_gamma = inbetween_gamma(next_blue, prev_blue)
 
-    return [ red_gamma, green_gamma, blue_gamma ]
+    return red_gamma, green_gamma, blue_gamma
 
+def reprint_time(minute):
+    str_hour = ('00' + str(int(minute // 60)))[-2:]
+    str_minute = ('00' + str(int(minute % 60)))[-2:]
+    print(str_hour + ':' + str_minute, end='\r')
+    return
 
 #-----------------------------------------------------------------
 
 def main():
     LIST_GAMMA, LIST_MINUTES = read_gamma()
-    print(LIST_GAMMA)
-    print(LIST_MINUTES)
-    print(minute())
-    print(calc_gamma(minute(), LIST_MINUTES, LIST_GAMMA))
-    #while(True):
-    #    call_xgamma(1.0, 1.0, 1.0)
-    #    time.sleep(INTERVAL)
-    #return
+
+    def while_body(minute, sleep_time):
+        red_gamma, green_gamma, blue_gamma = calc_gamma(minute, LIST_MINUTES, LIST_GAMMA)
+        call_xgamma(red_gamma, green_gamma, blue_gamma)
+        try:
+            time.sleep(sleep_time)
+        except:
+            exit()
+        return
+
+    if(SIMULATE):
+        current_minute = get_minute()
+        steps = 100
+        sleep_time = 1 / 50
+        for step in range(0, steps):
+            minute = (current_minute + step * MAX_MINUTE / steps) % MAX_MINUTE
+            reprint_time(minute)
+            while_body(minute, sleep_time)
+        while_body(current_minute, 0)
+        exit()
+
+    while(True):
+        while_body(get_minute(), INTERVAL)
+
+    return
 
 if __name__ == "__main__":
     main()
