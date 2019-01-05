@@ -44,15 +44,32 @@ def read_gamma():
             return False
         float_list = list(map(float, str_list)) # gamma values
         return float_list
+    def check_len(ls):
+        if(not (len(ls)==5)):
+            raise ValueError('gamma configuration requires syntax:\n    [hour] [minute]   [red-gamma] [green-gamma] [blue-gamma]')
+    def time_to_minutes(ls):
+        ls[0] = int(60 * ls[0] + ls[1])
+        del ls[1]
+        return ls
+    def take_first(ls):
+        return ls[0]
+    def pop_first(ls):
+        x = ls[0]
+        del ls[0]
+        return x
     with open(CONFIG_FILE_GAMMA, 'r') as file_gamma:
         unfiltered_gamma = list(map(line_to_list, file_gamma.read().splitlines()))
     gamma = list(filter(lambda x : x, unfiltered_gamma))
-    return gamma
+    list(filter(check_len, gamma))
+    gamma = list(map(time_to_minutes, gamma))
+    gamma.sort(key=take_first)
+    minutes = (list(map(pop_first, gamma)))
+    return gamma, minutes
 
-def gamma_index():
+def minute():
     time_struct = time.localtime()
-    minutes = 60 * time_struct.tm_hour + time_struct.tm_min
-    return minutes
+    minute = 60 * time_struct.tm_hour + time_struct.tm_min + time_struct.tm_sec / 60
+    return minute
 
 def call_xgamma(red_gamma, green_gamma, blue_gamma):
     str_red_gamma = str(red_gamma)
@@ -61,12 +78,47 @@ def call_xgamma(red_gamma, green_gamma, blue_gamma):
     subprocess.check_call(['xgamma', '-quiet', '-rgamma', str_red_gamma, '-ggamma', str_green_gamma, '-bgamma', str_blue_gamma])
     return
 
+def calc_gamma(minute, list_minutes, list_gamma):
+    next_index = list_minutes.index(next((x for x in list_minutes if x >= minute), list_minutes[0]))
+    next_minute = list_minutes[next_index]
+    if(next_index > 0):
+        prev_minute = list_minutes[next_index - 1]
+    else:
+        prev_minute = list_minutes[next_index - 1] - 24 * 60
+
+    def inbetween_gamma(next_gamma, prev_gamma):
+        diff_gamma = next_gamma - prev_gamma
+        diff_minute = next_minute - prev_minute
+        add_minute = minute - prev_minute
+        try:
+            factor = add_minute / diff_minute
+        except:
+            factor = 0
+        gamma = prev_gamma + factor * diff_gamma
+        return gamma
+
+    next_red = list_gamma[next_index][0]
+    prev_red = list_gamma[next_index - 1][0]
+    next_green = list_gamma[next_index][1]
+    prev_green = list_gamma[next_index - 1][1]
+    next_blue = list_gamma[next_index][2]
+    prev_blue = list_gamma[next_index - 1][2]
+
+    red_gamma = inbetween_gamma(next_red, prev_red)
+    green_gamma = inbetween_gamma(next_green, prev_green)
+    blue_gamma = inbetween_gamma(next_blue, prev_blue)
+
+    return [ red_gamma, green_gamma, blue_gamma ]
+
+
 #-----------------------------------------------------------------
 
 def main():
-    LIST_GAMMA = read_gamma()
+    LIST_GAMMA, LIST_MINUTES = read_gamma()
     print(LIST_GAMMA)
-    gamma_index()
+    print(LIST_MINUTES)
+    print(minute())
+    print(calc_gamma(minute(), LIST_MINUTES, LIST_GAMMA))
     #while(True):
     #    call_xgamma(1.0, 1.0, 1.0)
     #    time.sleep(INTERVAL)
