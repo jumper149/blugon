@@ -44,6 +44,10 @@ MAX_MINUTE = 24 * 60
 #-----------------------------------------------------------------
 
 def read_gamma():
+    """
+    reads configuration of gamma values from CONFIG_FILE_GAMMA
+    returns 2 lists: gamma, minutes
+    """
     def line_to_list(line):
         str_list = line.split()
         if(not str_list): # empty line
@@ -75,11 +79,13 @@ def read_gamma():
     return gamma, minutes
 
 def get_minute():
+    """returns the current minute"""
     time_struct = time.localtime()
     minute = 60 * time_struct.tm_hour + time_struct.tm_min + time_struct.tm_sec / 60
     return minute
 
 def call_xgamma(red_gamma, green_gamma, blue_gamma):
+    """change screen color with backend xorg-xgamma"""
     str_red_gamma = str(red_gamma)
     str_green_gamma = str(green_gamma)
     str_blue_gamma = str(blue_gamma)
@@ -87,6 +93,7 @@ def call_xgamma(red_gamma, green_gamma, blue_gamma):
     return
 
 def calc_gamma(minute, list_minutes, list_gamma):
+    """calculates the RGB gamma values"""
     next_index = list_minutes.index(next((x for x in list_minutes if x >= minute), list_minutes[0]))
     next_minute = list_minutes[next_index]
     prev_minute = list_minutes[next_index - 1]
@@ -128,7 +135,8 @@ def reprint_time(minute):
 def main():
     LIST_GAMMA, LIST_MINUTES = read_gamma()
 
-    def while_body(minute, sleep_time):
+    def while_body(minute, sleep_time=0):
+        """puts everything together to have only one function to call"""
         red_gamma, green_gamma, blue_gamma = calc_gamma(minute, LIST_MINUTES, LIST_GAMMA)
         call_xgamma(red_gamma, green_gamma, blue_gamma)
         try:
@@ -145,7 +153,7 @@ def main():
             minute = (current_minute + step * MAX_MINUTE / steps) % MAX_MINUTE
             reprint_time(minute)
             while_body(minute, sleep_time)
-        while_body(current_minute, 0)
+        while_body(current_minute)
         exit()
 
     while(True):
