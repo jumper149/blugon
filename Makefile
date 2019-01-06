@@ -1,3 +1,5 @@
+PREFIX := /usr
+
 install:
-	install -Dm755 blugon /usr/bin/
-	install -Dm644 configs/ /usr/share/blugon/
+	install -Dm755 blugon $(PREFIX)/bin/
+	install -Dm644 configs/ $(PREFIX)/share/blugon/
