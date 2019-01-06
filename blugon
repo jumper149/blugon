@@ -6,7 +6,7 @@ import math
 import subprocess
 import pathlib
 
-VERSION = '0.2'
+VERSION = '0.3'
 INTERVAL = 120
 CONFIG_DIR = str(pathlib.Path.home()) + '/.config/blugon'
 SIMULATE = False
