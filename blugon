@@ -50,9 +50,9 @@ def read_gamma():
     """
     def line_to_list(line):
         str_list = line.split()
-        if(not str_list): # empty line
+        if(not str_list): # remove empty line
             return False
-        if(str_list[0].startswith('#')): # comment
+        if(str_list[0].startswith('#')): # remove comment
             return False
         float_list = list(map(float, str_list)) # gamma values
         return float_list
@@ -101,6 +101,7 @@ def calc_gamma(minute, list_minutes, list_gamma):
         next_minute += MAX_MINUTE
 
     def inbetween_gamma(next_gamma, prev_gamma):
+        """calculates gamma value with linear regression"""
         diff_gamma = next_gamma - prev_gamma
         diff_minute = next_minute - prev_minute
         add_minute = minute - prev_minute
@@ -125,9 +126,10 @@ def calc_gamma(minute, list_minutes, list_gamma):
     return red_gamma, green_gamma, blue_gamma
 
 def reprint_time(minute):
+    """prints time in a human readable format"""
     str_hour = ('00' + str(int(minute // 60)))[-2:]
     str_minute = ('00' + str(int(minute % 60)))[-2:]
-    print(str_hour + ':' + str_minute, end='\r')
+    print('\r' + str_hour + ':' + str_minute, end='')
     return
 
 #-----------------------------------------------------------------
@@ -153,6 +155,7 @@ def main():
             minute = (current_minute + step * MAX_MINUTE / steps) % MAX_MINUTE
             reprint_time(minute)
             while_body(minute, sleep_time)
+        print() # print newline
         while_body(current_minute)
         exit()
 
