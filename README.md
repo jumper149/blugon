@@ -3,6 +3,8 @@
 
 The main purpose for it is to run in the background and change the gamma values of your screen depending on your local time.
 
+![blugon-simulation](https://thumbs.gfycat.com/LeanSnappyGemsbok.webp)
+
 ## Usage
 To use blugon as your daily blue light savior set up your configuration in `~/.config/blugon/`.
 
