@@ -10,5 +10,5 @@ install:
 	install -m644 configs/default/gamma $(DESTDIR)$(PREFIX)/share/blugon/configs/default/
 	install -d $(DESTDIR)$(PREFIX)/share/blugon/configs/extreme/
 	install -m644 configs/extreme/gamma $(DESTDIR)$(PREFIX)/share/blugon/configs/extreme/
-	install -d $(DESTDIR)$(PREFIX)/share/man/man8/
+	install -d $(DESTDIR)$(PREFIX)/share/man/man1/
 	install -m644 blugon.1.gz $(DESTDIR)$(PREFIX)/share/man/man1/
