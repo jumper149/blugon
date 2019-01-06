@@ -6,14 +6,14 @@ import math
 import subprocess
 import pathlib
 
-VERSION = '0.3'
+VERSION = '1.0'
 INTERVAL = 120
 CONFIG_DIR = str(pathlib.Path.home()) + '/.config/blugon'
 SIMULATE = False
 
 #-----------------------------------------------------------------
 
-parser = argparse.ArgumentParser(prog='blugon', description="A blue light filter written in 'Python' using 'XRandR' as backend.")
+parser = argparse.ArgumentParser(prog='blugon', description="A blue light filter written in 'Python' using 'xgamma' as backend.")
 
 parser.add_argument('-v', '--version', action='store_true', dest='version', help='print version and exit')
 parser.add_argument('-i', '--interval', nargs='?', dest='interval', type=float, const=INTERVAL, default=INTERVAL, help='set %(dest)s in seconds (default: '+str(INTERVAL)+')')
