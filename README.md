@@ -10,7 +10,7 @@ To use blugon as your daily blue light savior set up your configuration in `~/.c
 
 You can start blugon from the command line with `blugon`.
 
-To fork it just use `blugon&` and stop it with `killall blugon`.
+To run it in the background just use `(blugon&)` and stop it with `killall blugon`.
 
 Other options include:
 
