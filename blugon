@@ -6,7 +6,7 @@ import math
 import subprocess
 import pathlib
 
-VERSION = '0'
+VERSION = '0.2'
 INTERVAL = 120
 CONFIG_DIR = str(pathlib.Path.home()) + '/.config/blugon'
 SIMULATE = False
@@ -18,7 +18,7 @@ parser = argparse.ArgumentParser(prog='blugon', description="A blue light filter
 parser.add_argument('-v', '--version', action='store_true', dest='version', help='print version and exit')
 parser.add_argument('-i', '--interval', nargs='?', dest='interval', type=float, const=INTERVAL, default=INTERVAL, help='set %(dest)s in seconds (default: '+str(INTERVAL)+')')
 parser.add_argument('-c', '--config', nargs='?', dest='config_dir', type=str, const=CONFIG_DIR, default=CONFIG_DIR, help='set configuration directory (default: '+CONFIG_DIR+')')
-parser.add_argument('-s', '--simulate', action='store_true', dest='simulate', help="simulate 'blugon' over one day and exit")
+parser.add_argument('-s', '--simulation', action='store_true', dest='simulate', help="simulate 'blugon' over one day and exit")
 
 #-----------------------------------------------------------------
 
