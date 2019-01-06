@@ -18,10 +18,9 @@ Other options include:
 ## Install
 For Archlinux users I am maintaining an AUR-Package: https://aur.archlinux.org/packages/blugon/
 
-### Dependencies
+**Dependencies:**
 - `python`
 - `xorg-xgamma`
-
 I am planning to support other backends later on, but for now you have to use xorg-xgamma.
 
 If you are on Linux and want to install without package manager (please don't)  you can use:
