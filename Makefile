@@ -1,7 +1,7 @@
 PREFIX := /usr
 
 build:
-	gzip --keep blugon.1
+	gzip --force --keep blugon.1
 
 install:
 	install -d $(DESTDIR)$(PREFIX)/bin/
