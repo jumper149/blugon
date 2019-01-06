@@ -15,23 +15,6 @@ Other options include:
 - `-c [dir]` or `--config [dir]` to specify configuration directory (default: `~/.config/blugon/`)
 - `-s` or `--simulation` to quickly simulate the configuration for the whole day
 
-## Install
-For Archlinux users I am maintaining an AUR-Package: https://aur.archlinux.org/packages/blugon/
-
-**Dependencies:**
-- `python`
-- `xorg-xgamma`
-I am planning to support other backends later on, but for now you have to use xorg-xgamma.
-
-If you are on Linux and want to install without package manager (please don't)  you can use:
-- `make`
-- `make install`
-
-Configuration is supposed to be done after installing.
-
-You can also use the script without installing it:
-  `/usr/bin/pyhon blugon`
-
 ## Configuration
 Examples for configurations can be found in `/usr/share/blugon/configs/`.
 
@@ -41,3 +24,18 @@ To use the default configuration you can use:
 
 For now the configuration only consists of the `gamma`-file.
 
+## Dependencies
+- `python`
+- `xorg-xgamma` I am planning to support other backends later on, but for now you have to use xorg-xgamma
+
+## Install
+For Archlinux users I am maintaining an AUR-Package: https://aur.archlinux.org/packages/blugon/
+
+If you are on Linux and want to install without package manager (please don't)  you can use:
+- `make`
+- `make install`
+
+Configuration is supposed to be done after installing.
+
+You can also use the script without installing it:
+  `/usr/bin/pyhon blugon`
