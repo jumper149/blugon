@@ -40,4 +40,4 @@ If you are on Linux and want to install without package manager (please don't)  
 Configuration is supposed to be done after installing.
 
 You can also use the script without installing it:
-  `/usr/bin/pyhon blugon`
+  `/usr/bin/python blugon`
