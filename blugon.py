@@ -1,12 +1,12 @@
 #!/usr/bin/python3
 
-import argparse
+from argparse import ArgumentParser
 import time
 import math
 from subprocess import check_call
 from os import getenv
 
-VERSION = '1.0'
+VERSION = '1.1'
 
 INTERVAL = 120
 
@@ -19,7 +19,7 @@ SIMULATE = False
 
 #-----------------------------------------------------------------
 
-parser = argparse.ArgumentParser(prog='blugon', description="A blue light filter written in 'Python' using 'xgamma' as backend")
+parser = ArgumentParser(prog='blugon', description="A blue light filter written in 'Python' using 'xgamma' as backend")
 
 parser.add_argument('-v', '--version', action='store_true', dest='version', help='print version and exit')
 parser.add_argument('-i', '--interval', nargs='?', dest='interval', type=float, const=INTERVAL, default=INTERVAL, help='set %(dest)s in seconds (default: '+str(INTERVAL)+')')
