@@ -1,3 +1,6 @@
 - systemd service
 - tty compatible?
 - other backends
+  - sct
+- backlight control
+- flag to copy (default) configuration
