@@ -13,7 +13,7 @@ SIMULATE = False
 
 #-----------------------------------------------------------------
 
-parser = argparse.ArgumentParser(prog='blugon', description="A blue light filter written in 'Python' using 'xgamma' as backend.")
+parser = argparse.ArgumentParser(prog='blugon', description="A blue light filter written in 'Python' using 'xgamma' as backend")
 
 parser.add_argument('-v', '--version', action='store_true', dest='version', help='print version and exit')
 parser.add_argument('-i', '--interval', nargs='?', dest='interval', type=float, const=INTERVAL, default=INTERVAL, help='set %(dest)s in seconds (default: '+str(INTERVAL)+')')
@@ -24,14 +24,14 @@ parser.add_argument('-s', '--simulation', action='store_true', dest='simulate', 
 
 args = parser.parse_args()
 
-if(args.version):
+if args.version:
     print("blugon " + VERSION)
     exit()
 
 INTERVAL = math.ceil(args.interval)
 
 CONFIG_DIR = args.config_dir
-if(not CONFIG_DIR.endswith('/')):
+if not CONFIG_DIR.endswith('/'):
     CONFIG_DIR += '/'
 CONFIG_FILE_GAMMA = CONFIG_DIR + "gamma"
 
@@ -50,14 +50,14 @@ def read_gamma():
     """
     def line_to_list(line):
         str_list = line.split()
-        if(not str_list): # remove empty line
+        if not str_list: # remove empty line
             return False
-        if(str_list[0].startswith('#')): # remove comment
+        if str_list[0].startswith('#'): # remove comment
             return False
         float_list = list(map(float, str_list)) # gamma values
         return float_list
     def check_len(ls):
-        if(not (len(ls)==5)):
+        if not (len(ls)==5):
             raise ValueError('gamma configuration requires syntax:\n    [hour] [minute]   [red-gamma] [green-gamma] [blue-gamma]')
     def time_to_minutes(ls):
         ls[0] = int(60 * ls[0] + ls[1])
@@ -97,7 +97,7 @@ def calc_gamma(minute, list_minutes, list_gamma):
     next_index = list_minutes.index(next((x for x in list_minutes if x >= minute), list_minutes[0]))
     next_minute = list_minutes[next_index]
     prev_minute = list_minutes[next_index - 1]
-    if(next_minute < prev_minute):
+    if next_minute < prev_minute:
         next_minute += MAX_MINUTE
 
     def inbetween_gamma(next_gamma, prev_gamma):
@@ -147,7 +147,7 @@ def main():
             exit()
         return
 
-    if(SIMULATE):
+    if SIMULATE:
         current_minute = get_minute()
         steps = 100
         sleep_time = 1 / 50
@@ -159,7 +159,7 @@ def main():
         while_body(current_minute)
         exit()
 
-    while(True):
+    while True :
         while_body(get_minute(), INTERVAL)
 
     return
