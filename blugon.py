@@ -3,12 +3,18 @@
 import argparse
 import time
 import math
-import subprocess
-import pathlib
+from subprocess import check_call
+from os import getenv
 
 VERSION = '1.0'
+
 INTERVAL = 120
-CONFIG_DIR = str(pathlib.Path.home()) + '/.config/blugon'
+
+CONFIG_DIR = getenv('XDG_CONFIG_HOME')
+if not CONFIG_DIR:
+    CONFIG_DIR = getenv('HOME') + '/.config'
+CONFIG_DIR += '/blugon'
+
 SIMULATE = False
 
 #-----------------------------------------------------------------
@@ -89,7 +95,7 @@ def call_xgamma(red_gamma, green_gamma, blue_gamma):
     str_red_gamma = str(red_gamma)
     str_green_gamma = str(green_gamma)
     str_blue_gamma = str(blue_gamma)
-    subprocess.check_call(['xgamma', '-quiet', '-rgamma', str_red_gamma, '-ggamma', str_green_gamma, '-bgamma', str_blue_gamma])
+    check_call(['xgamma', '-quiet', '-rgamma', str_red_gamma, '-ggamma', str_green_gamma, '-bgamma', str_blue_gamma])
     return
 
 def calc_gamma(minute, list_minutes, list_gamma):
