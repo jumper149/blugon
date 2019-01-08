@@ -8,7 +8,7 @@ from os import getenv
 
 #--------------------------------------------------DEFAULTS
 
-VERSION = '1.2'
+VERSION = '1.3'
 
 DISPLAY = getenv('DISPLAY')
 
