@@ -1,8 +1,6 @@
 # blugon
 **A simple blue light filter written in Python**
 
-The main purpose for it is to run in the background and change the gamma values of your screen depending on your local time.
-
 ![blugon-simulation](https://thumbs.gfycat.com/LeanSnappyGemsbok.webp)
 
 ## Usage
@@ -30,12 +28,14 @@ For now the configuration only consists of the `gamma`-file.
 
 ## Dependencies
 - `python`
-- `xorg-xgamma` I am planning to support other backends later on, but for now you have to use xorg-xgamma
+### optional:
+- `xorg-xgamma` as backend
+- `scg` as backend @ [GitHub](https://github.com/jumper149/scg), [AUR](https://aur.archlinux.org/packages/scg)
 
 ## Install
-For Archlinux users I am maintaining an AUR-Package: https://aur.archlinux.org/packages/blugon/
+For Archlinux users I am maintaining an [AUR-Package](https://aur.archlinux.org/packages/blugon)
 
-If you are on Linux and want to install without package manager (please don't)  you can use:
+If you are on Linux you can build and install:
 - `make`
 - `make install`
 
