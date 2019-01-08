@@ -1,6 +1,7 @@
 # blugon
 **A simple Blue Light Filter for X written in Python**
 
+![blugon-comparison](https://i.imgur.com/iiQ1Y9b.png)
 ![blugon-simulation](https://thumbs.gfycat.com/LeanSnappyGemsbok.webp)
 
 ## Usage
