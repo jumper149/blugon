@@ -10,6 +10,8 @@ from os import getenv
 
 VERSION = '1.2'
 
+DISPLAY = getenv('DISPLAY')
+
 SIMULATE = False
 
 INTERVAL = 120
@@ -173,6 +175,9 @@ CONFIG_FILE_GAMMA = CONFIG_DIR + "gamma"
 BACKEND = args.backend
 if not BACKEND in BACKEND_LIST:
     raise ValueError('backend not found, choose from:\n    ' + '\n    '.join(BACKEND_LIST))
+
+if not DISPLAY:
+    exit(11)
 
 #--------------------------------------------------FUNCTIONS
 
