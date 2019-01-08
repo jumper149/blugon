@@ -32,6 +32,8 @@ For now the configuration only consists of the `gamma`-file.
 - `xorg-xgamma` as backend
 - `scg` as backend @ [GitHub](https://github.com/jumper149/scg), [AUR](https://aur.archlinux.org/packages/scg)
 
+Choose atleast one backend. `scg` is the recommended backend. `xorg-xgamma` is probably most compatible with any system.
+
 ## Install
 For Archlinux users I am maintaining an [AUR-Package](https://aur.archlinux.org/packages/blugon)
 
