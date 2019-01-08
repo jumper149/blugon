@@ -10,6 +10,9 @@ You can start blugon from the command line with `blugon`.
 
 To run it in the background just use `(blugon&)` and stop it with `killall blugon`.
 
+To run blugon with systemd you can enable the service as user:
+`systemctl --user enable blugon.service`
+
 Options include:
 
 - `-s` or `--simulation` to quickly simulate the configuration for the whole day

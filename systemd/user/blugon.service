@@ -1,0 +1,20 @@
+[Unit]
+Description=Blue Light Filter
+Documentation=man:blugon(1)
+After=graphical-session.target
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/blugon
+RestartForceExitStatus=11
+
+# disallow writing to /usr, /bin, /sbin, ...
+ProtectSystem=yes
+# more paranoid security settings
+NoNewPrivileges=yes
+ProtectKernelTunables=yes
+ProtectControlGroups=yes
+RestrictNamespaces=yes
+
+[Install]
+WantedBy=default.target
