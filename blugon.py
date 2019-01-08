@@ -10,6 +10,8 @@ from os import getenv
 
 VERSION = '1.2'
 
+SIMULATE = False
+
 INTERVAL = 120
 
 CONFIG_DIR = getenv('XDG_CONFIG_HOME')
@@ -18,8 +20,6 @@ if not CONFIG_DIR:
 CONFIG_DIR += '/blugon'
 
 BACKEND = 'xgamma'
-
-SIMULATE = False
 
 #--------------------------------------------------DEFINITIONS
 
@@ -148,8 +148,8 @@ BACKEND_LIST = [ 'xgamma', 'scg' ]
 parser = ArgumentParser(prog='blugon', description="A blue light filter written in 'Python' using 'xgamma' as backend")
 
 parser.add_argument('-v', '--version', action='store_true', dest='version', help='print version and exit')
-parser.add_argument('-i', '--interval', nargs='?', dest='interval', type=float, const=INTERVAL, default=INTERVAL, help='set %(dest)s in seconds (default: '+str(INTERVAL)+')')
 parser.add_argument('-s', '--simulation', action='store_true', dest='simulate', help="simulate 'blugon' over one day and exit")
+parser.add_argument('-i', '--interval', nargs='?', dest='interval', type=float, const=INTERVAL, default=INTERVAL, help='set %(dest)s in seconds (default: '+str(INTERVAL)+')')
 parser.add_argument('-c', '--config', nargs='?', dest='config_dir', type=str, const=CONFIG_DIR, default=CONFIG_DIR, help='set configuration directory (default: '+CONFIG_DIR+')')
 parser.add_argument('-b', '--backend', nargs='?', dest='backend', type=str, const=BACKEND, default=BACKEND, help='set backend (default: '+BACKEND+')')
 
@@ -161,9 +161,9 @@ if args.version:
     print('blugon ' + VERSION)
     exit()
 
-INTERVAL = math.ceil(args.interval)
-
 SIMULATE = args.simulate
+
+INTERVAL = math.ceil(args.interval)
 
 CONFIG_DIR = args.config_dir
 if not CONFIG_DIR.endswith('/'):
