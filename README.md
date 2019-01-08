@@ -35,7 +35,7 @@ For now the configuration only consists of the `gamma`-file.
 Choose atleast one backend. `scg` is the recommended backend. `xorg-xgamma` is probably most compatible with any system.
 
 ## Install
-For Archlinux users I am maintaining an [AUR-Package](https://aur.archlinux.org/packages/blugon)
+For Archlinux users I am maintaining an [AUR-Package](https://aur.archlinux.org/packages/blugon).
 
 If you are on Linux you can build and install:
 - `make`
