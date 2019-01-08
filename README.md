@@ -12,10 +12,12 @@ You can start blugon from the command line with `blugon`.
 
 To run it in the background just use `(blugon&)` and stop it with `killall blugon`.
 
-Other options include:
+Options include:
 
-- `-c [dir]` or `--config [dir]` to specify configuration directory (default: `~/.config/blugon/`)
 - `-s` or `--simulation` to quickly simulate the configuration for the whole day
+- `-i [secs]` or `--interval=[secs]` to set time between refreshes
+- `-c [dir]` or `--config=[dir]` to specify configuration directory
+- `-b [backend]` or `--backend=[backend]` to choose the backend for communication with X11
 
 ## Configuration
 Examples for configurations can be found in `/usr/share/blugon/configs/`.
@@ -40,4 +42,4 @@ If you are on Linux and want to install without package manager (please don't)  
 Configuration is supposed to be done after installing.
 
 You can also use the script without installing it:
-  `/usr/bin/python blugon`
+  `/usr/bin/python3 blugon`
