@@ -6,7 +6,9 @@ import math
 from subprocess import check_call
 from os import getenv
 
-VERSION = '1.1'
+#--------------------------------------------------DEFAULTS
+
+VERSION = '1.2'
 
 INTERVAL = 120
 
@@ -15,37 +17,11 @@ if not CONFIG_DIR:
     CONFIG_DIR = getenv('HOME') + '/.config'
 CONFIG_DIR += '/blugon'
 
-BACKEND = 'scg'
+BACKEND = 'xgamma'
 
 SIMULATE = False
 
-#-----------------------------------------------------------------
-
-parser = ArgumentParser(prog='blugon', description="A blue light filter written in 'Python' using 'xgamma' as backend")
-
-parser.add_argument('-v', '--version', action='store_true', dest='version', help='print version and exit')
-parser.add_argument('-i', '--interval', nargs='?', dest='interval', type=float, const=INTERVAL, default=INTERVAL, help='set %(dest)s in seconds (default: '+str(INTERVAL)+')')
-parser.add_argument('-c', '--config', nargs='?', dest='config_dir', type=str, const=CONFIG_DIR, default=CONFIG_DIR, help='set configuration directory (default: '+CONFIG_DIR+')')
-parser.add_argument('-s', '--simulation', action='store_true', dest='simulate', help="simulate 'blugon' over one day and exit")
-
-#-----------------------------------------------------------------
-
-args = parser.parse_args()
-
-if args.version:
-    print("blugon " + VERSION)
-    exit()
-
-INTERVAL = math.ceil(args.interval)
-
-CONFIG_DIR = args.config_dir
-if not CONFIG_DIR.endswith('/'):
-    CONFIG_DIR += '/'
-CONFIG_FILE_GAMMA = CONFIG_DIR + "gamma"
-
-SIMULATE = args.simulate
-
-#-----------------------------------------------------------------
+#--------------------------------------------------DEFINITIONS
 
 MAX_MINUTE = 24 * 60
 
@@ -165,7 +141,40 @@ KELVIN_RGB_TABLE = {
     11900: (195, 210, 255),
     12000: (195, 209, 255)}
 
-#-----------------------------------------------------------------
+BACKEND_LIST = [ 'xgamma', 'scg' ]
+
+#--------------------------------------------------PARSER
+
+parser = ArgumentParser(prog='blugon', description="A blue light filter written in 'Python' using 'xgamma' as backend")
+
+parser.add_argument('-v', '--version', action='store_true', dest='version', help='print version and exit')
+parser.add_argument('-i', '--interval', nargs='?', dest='interval', type=float, const=INTERVAL, default=INTERVAL, help='set %(dest)s in seconds (default: '+str(INTERVAL)+')')
+parser.add_argument('-s', '--simulation', action='store_true', dest='simulate', help="simulate 'blugon' over one day and exit")
+parser.add_argument('-c', '--config', nargs='?', dest='config_dir', type=str, const=CONFIG_DIR, default=CONFIG_DIR, help='set configuration directory (default: '+CONFIG_DIR+')')
+parser.add_argument('-b', '--backend', nargs='?', dest='backend', type=str, const=BACKEND, default=BACKEND, help='set backend (default: '+BACKEND+')')
+
+#--------------------------------------------------ARGUMENTS
+
+args = parser.parse_args()
+
+if args.version:
+    print('blugon ' + VERSION)
+    exit()
+
+INTERVAL = math.ceil(args.interval)
+
+SIMULATE = args.simulate
+
+CONFIG_DIR = args.config_dir
+if not CONFIG_DIR.endswith('/'):
+    CONFIG_DIR += '/'
+CONFIG_FILE_GAMMA = CONFIG_DIR + "gamma"
+
+BACKEND = args.backend
+if not BACKEND in BACKEND_LIST:
+    raise ValueError('backend not found, choose from:\n    ' + '\n    '.join(BACKEND_LIST))
+
+#--------------------------------------------------FUNCTIONS
 
 def read_gamma():
     """
@@ -266,6 +275,7 @@ def call_scg(red_gamma, green_gamma, blue_gamma):
     return
 
 def call_backend(backend, red_gamma, green_gamma, blue_gamma):
+    """wrapper to call various backends"""
     if backend == 'xgamma':
         call_xgamma(red_gamma, green_gamma, blue_gamma)
     elif backend == 'scg':
@@ -285,7 +295,7 @@ def reprint_time(minute):
     print('\r' + str_hour + ':' + str_minute, end='')
     return
 
-#-----------------------------------------------------------------
+#--------------------------------------------------MAIN
 
 def main():
     LIST_GAMMA, LIST_MINUTES = read_gamma()
