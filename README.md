@@ -1,5 +1,5 @@
 # blugon
-**A simple Blue Bight Filter written in Python**
+**A simple Blue Light Filter written in Python**
 
 ![blugon-simulation](https://thumbs.gfycat.com/LeanSnappyGemsbok.webp)
 
