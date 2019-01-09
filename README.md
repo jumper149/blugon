@@ -5,8 +5,6 @@
 ![blugon-simulation](https://thumbs.gfycat.com/LeanSnappyGemsbok.webp)
 
 ## Usage
-To use blugon as your daily blue light savior set up your configuration in `~/.config/blugon/`.
-
 You can start blugon from the command line with `blugon`.
 
 To run it in the background just use `(blugon&)` and stop it with `killall blugon`.
@@ -14,8 +12,7 @@ To run it in the background just use `(blugon&)` and stop it with `killall blugo
 To run blugon with systemd you can enable the service as user:
 `systemctl --user enable blugon.service`
 
-Options include:
-
+### Options:
 - `-s` or `--simulation` to quickly simulate the configuration for the whole day
 - `-i [secs]` or `--interval=[secs]` to set time between refreshes
 - `-c [dir]` or `--config=[dir]` to specify configuration directory
