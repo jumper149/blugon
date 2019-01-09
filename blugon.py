@@ -8,6 +8,8 @@ from subprocess import check_call
 from os import getenv
 from sys import stdout
 
+MAKE_INSTALL_PREFIX = '/usr'
+
 #--------------------------------------------------DEFAULTS
 
 VERSION = '1.4'
@@ -147,7 +149,25 @@ KELVIN_RGB_TABLE = {
     11900: (195, 210, 255),
     12000: (195, 209, 255)}
 
-BACKEND_LIST = [ 'xgamma', 'scg' ]
+COLOR_TABLE = {
+        0:  '282a2e',
+        1:  'a54242',
+        2:  '8c9440',
+        3:  'de935f',
+        4:  '5f819d',
+        5:  '85678f',
+        6:  '5e8d87',
+        7:  '707880',
+        8:  '373b41',
+        9:  'cc6666',
+        10: 'b5bd68',
+        11: 'f0c674',
+        12: '81a2be',
+        13: 'b294bb',
+        14: '8abeb7',
+        15: 'c5c8c6'}
+
+BACKEND_LIST = [ 'xgamma', 'scg', 'tty' ]
 
 #--------------------------------------------------PARSER
 
@@ -171,16 +191,35 @@ if args.config_dir:
 if not CONFIG_DIR.endswith('/'):
     CONFIG_DIR += '/'
 CONFIG_FILE_GAMMA = CONFIG_DIR + 'gamma'
-CONFIG_FILE_GAMMA_FALLBACK = '/usr/share/blugon/configs/default/gamma'
+CONFIG_FILE_GAMMA_FALLBACK = MAKE_INSTALL_PREFIX + '/share/blugon/configs/default/gamma'
 CONFIG_FILE_CONFIG = CONFIG_DIR + 'config'
                                                #---ARGUMENTS END
 
 confparser = ConfigParser()
 confparser['main'] = {
         'interval': str(INTERVAL),
-        'backend':  BACKEND}
+        'backend':  BACKEND      }
+
+confparser['tty'] = {
+        'color0':  str(COLOR_TABLE[0]) ,
+        'color1':  str(COLOR_TABLE[1]) ,
+        'color2':  str(COLOR_TABLE[2]) ,
+        'color3':  str(COLOR_TABLE[3]) ,
+        'color4':  str(COLOR_TABLE[4]) ,
+        'color5':  str(COLOR_TABLE[5]) ,
+        'color6':  str(COLOR_TABLE[6]) ,
+        'color7':  str(COLOR_TABLE[7]) ,
+        'color8':  str(COLOR_TABLE[8]) ,
+        'color9':  str(COLOR_TABLE[9]) ,
+        'color10': str(COLOR_TABLE[10]),
+        'color11': str(COLOR_TABLE[11]),
+        'color12': str(COLOR_TABLE[12]),
+        'color13': str(COLOR_TABLE[13]),
+        'color14': str(COLOR_TABLE[14]),
+        'color15': str(COLOR_TABLE[15])}
 
 confparser.read(CONFIG_FILE_CONFIG)
+
 
 confs = confparser['main']
 
@@ -318,12 +357,31 @@ def call_scg(red_gamma, green_gamma, blue_gamma):
     check_call(['scg', str_red_gamma, str_green_gamma, str_blue_gamma])
     return
 
+def call_tty(red_gamma, green_gamma, blue_gamma):
+    """start subprocess of backend tty"""
+    def hex_tempered(i):
+        color = COLOR_TABLE[i]
+        def flt_to_hex(flt):
+            if flt > 255:
+                flt = 255
+            return format(int(flt), 'x')
+        hex_r = flt_to_hex(red_gamma * int(color[0:2], 16))
+        hex_g = flt_to_hex(green_gamma * int(color[2:4], 16))
+        hex_b = flt_to_hex(blue_gamma * int(color[4:6], 16))
+        string = format(i, 'X') + hex_r + hex_g + hex_b
+        return string
+    hex_list = [ hex_tempered(i) for i in range(16) ]
+    check_call([MAKE_INSTALL_PREFIX + '/lib/blugon/tty.sh'] + hex_list)
+    return
+
 def call_backend(backend, red_gamma, green_gamma, blue_gamma):
     """wrapper to call various backends"""
     if backend == 'xgamma':
         call_xgamma(red_gamma, green_gamma, blue_gamma)
     elif backend == 'scg':
         call_scg(red_gamma, green_gamma, blue_gamma)
+    elif backend == 'tty':
+        call_tty(red_gamma, green_gamma, blue_gamma)
     return
 
 def get_minute():
