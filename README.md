@@ -27,8 +27,7 @@ Examples for configurations can be found in `/usr/share/blugon/configs/`.
 To use the default configuration you can use:
 - `mkdir -p ~/.config/blugon/`
 - `cp /usr/share/blugon/configs/default/gamma ~/.config/blugon/gamma`
-
-For now the configuration only consists of the `gamma`-file.
+- `blugon --printconfig > ~/.config/blugon/config`
 
 ## Dependencies
 - `python`

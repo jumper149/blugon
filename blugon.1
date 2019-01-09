@@ -17,11 +17,15 @@ blugon \- blue light filter for X11
 .SH DESCRIPTION
 blugon is a simple blue light filter that uses xgamma as a backed and is configured in "$XDG_CONFIG_HOME/blugon/" or "$HOME/.config/blugon/" as fallback.
 
-You can copy the standard configuration into your home directory:
+Configuration files are 'config' and 'gamma'.
+
+You can get a 'config' file with default values by using:
+
+    $ blugon --printconfig > ~/.config/blugon/config
+
+You can copy the standard 'gamma' configuration into your home directory:
 
     $ cp /usr/share/blugon/configs/default/gamma ~/.config/blugon/
-
-At the moment configuration only includes the 'gamma' file.
 
 You can enable the systemd service as user:
 
@@ -30,16 +34,21 @@ You can enable the systemd service as user:
 .SH OPTIONS
 .TP
 .B \-h, \-\-help
-Show quick help.
+Show quick help and then exit.
 
 .TP
 .B \-v, \-\-version
-Display the version of your blugon.
+Display the version of your blugon and then exit.
+
+.TP
+.B \-p, \-\-printconfig
+Print the default configuration to stdout and then exit.
 
 .TP
 .B \-s, \-\-simulation
 Start a simulation of the chosen configuration to see how it changes over the day.
 Changing the interval will not have an effect here.
+The program exits after the simulation.
 
 .TP
 .B \-i\  seconds \fR,\ \fB\-\-interval=seconds

@@ -1,14 +1,16 @@
 #!/usr/bin/python3
 
+from configparser import ConfigParser
 from argparse import ArgumentParser
 import time
 import math
 from subprocess import check_call
 from os import getenv
+from sys import stdout
 
 #--------------------------------------------------DEFAULTS
 
-VERSION = '1.3'
+VERSION = '1.4'
 
 DISPLAY = getenv('DISPLAY')
 
@@ -147,37 +149,62 @@ BACKEND_LIST = [ 'xgamma', 'scg' ]
 
 #--------------------------------------------------PARSER
 
-parser = ArgumentParser(prog='blugon', description="A blue light filter written in 'Python' using 'xgamma' as backend")
+argparser = ArgumentParser(prog='blugon', description="A blue light filter written in 'Python' using 'xgamma' as backend")
 
-parser.add_argument('-v', '--version', action='store_true', dest='version', help='print version and exit')
-parser.add_argument('-s', '--simulation', action='store_true', dest='simulate', help="simulate 'blugon' over one day and exit")
-parser.add_argument('-i', '--interval', nargs='?', dest='interval', type=float, const=INTERVAL, default=INTERVAL, help='set %(dest)s in seconds (default: '+str(INTERVAL)+')')
-parser.add_argument('-c', '--config', nargs='?', dest='config_dir', type=str, const=CONFIG_DIR, default=CONFIG_DIR, help='set configuration directory (default: '+CONFIG_DIR+')')
-parser.add_argument('-b', '--backend', nargs='?', dest='backend', type=str, const=BACKEND, default=BACKEND, help='set backend (default: '+BACKEND+')')
+argparser.add_argument('-v', '--version', action='store_true', dest='version', help='print version and exit')
+argparser.add_argument('-p', '--printconfig', action='store_true', dest='printconfig', help='print default configuration and exit')
+argparser.add_argument('-s', '--simulation', action='store_true', dest='simulate', help="simulate 'blugon' over one day and exit")
+argparser.add_argument('-i', '--interval', nargs='?', dest='interval', type=float, help='set %(dest)s in seconds (default: '+str(INTERVAL)+')')
+argparser.add_argument('-c', '--config', nargs='?', dest='config_dir', type=str, help='set configuration directory (default: '+CONFIG_DIR+')')
+argparser.add_argument('-b', '--backend', nargs='?', dest='backend', type=str, help='set backend (default: '+BACKEND+')')
+
+args = argparser.parse_args()
+
+#--------------------------------------------------CONFIG
+
+                                               #---ARGUMENTS
+if args.config_dir:
+    CONFIG_DIR = args.config_dir
+if not CONFIG_DIR.endswith('/'):
+    CONFIG_DIR += '/'
+CONFIG_FILE_GAMMA = CONFIG_DIR + 'gamma'
+CONFIG_FILE_GAMMA_FALLBACK = '/usr/share/blugon/configs/default/gamma'
+CONFIG_FILE_CONFIG = CONFIG_DIR + 'config'
+                                               #---ARGUMENTS END
+
+confparser = ConfigParser()
+confparser['main'] = {
+        'interval': str(INTERVAL),
+        'backend':  BACKEND}
+
+confparser.read(CONFIG_FILE_CONFIG)
+
+confs = confparser['main']
 
 #--------------------------------------------------ARGUMENTS
-
-args = parser.parse_args()
 
 if args.version:
     print('blugon ' + VERSION)
     exit()
 
+if args.printconfig:
+    confparser.write(stdout)
+    exit()
+
 SIMULATE = args.simulate
 
-INTERVAL = math.ceil(args.interval)
+INTERVAL = confs.getint('interval')
+if args.interval:
+    INTERVAL = math.ceil(args.interval)
 
-CONFIG_DIR = args.config_dir
-if not CONFIG_DIR.endswith('/'):
-    CONFIG_DIR += '/'
-CONFIG_FILE_GAMMA = CONFIG_DIR + "gamma"
-
-BACKEND = args.backend
+BACKEND = confs.get('backend')
+if args.backend:
+    BACKEND = args.backend
 if not BACKEND in BACKEND_LIST:
     raise ValueError('backend not found, choose from:\n    ' + '\n    '.join(BACKEND_LIST))
 
 if not DISPLAY:
-    exit(11)
+    exit(11) # provide exit status 11 for systemd-service
 
 #--------------------------------------------------FUNCTIONS
 
@@ -207,8 +234,15 @@ def read_gamma():
         x = ls[0]
         del ls[0]
         return x
-    with open(CONFIG_FILE_GAMMA, 'r') as file_gamma:
-        unfiltered_gamma = list(map(line_to_list, file_gamma.read().splitlines()))
+
+    try:
+        file_gamma = open(CONFIG_FILE_GAMMA, 'r')
+    except:
+        #print('Using fallback gamma configuration file: \'' + CONFIG_FILE_GAMMA_FALLBACK + '\'')
+        file_gamma = open(CONFIG_FILE_GAMMA_FALLBACK, 'r')
+    unfiltered_gamma = list(map(line_to_list, file_gamma.read().splitlines()))
+    file_gamma.close()
+
     gamma = list(filter(lambda x : x, unfiltered_gamma))
     list(filter(check_len, gamma))
     gamma = list(map(time_to_minutes, gamma))
