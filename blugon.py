@@ -149,7 +149,7 @@ BACKEND_LIST = [ 'xgamma', 'scg' ]
 
 #--------------------------------------------------PARSER
 
-argparser = ArgumentParser(prog='blugon', description="A blue light filter written in 'Python' using 'xgamma' as backend")
+argparser = ArgumentParser(prog='blugon', description="A simple Blue Light Filter for X")
 
 argparser.add_argument('-v', '--version', action='store_true', dest='version', help='print version and exit')
 argparser.add_argument('-p', '--printconfig', action='store_true', dest='printconfig', help='print default configuration and exit')
