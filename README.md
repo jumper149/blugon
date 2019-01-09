@@ -12,7 +12,7 @@ To run it in the background just use `(blugon&)` and stop it with `killall blugo
 To run blugon with systemd you can enable the service as user:
 `systemctl --user enable blugon.service`
 
-### options:
+### Options:
 - `-s` or `--simulation` to quickly simulate the configuration for the whole day
 - `-i [secs]` or `--interval=[secs]` to set time between refreshes
 - `-c [dir]` or `--config=[dir]` to specify configuration directory
