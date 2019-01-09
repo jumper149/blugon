@@ -10,7 +10,7 @@ from sys import stdout
 
 #--------------------------------------------------DEFAULTS
 
-VERSION = '1.4'
+VERSION = '0.4'
 
 DISPLAY = getenv('DISPLAY')
 
