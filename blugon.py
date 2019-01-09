@@ -247,7 +247,7 @@ if args.backend:
 if not BACKEND in BACKEND_LIST:
     raise ValueError('backend not found, choose from:\n    ' + '\n    '.join(BACKEND_LIST))
 
-if not DISPLAY:
+if (not DISPLAY) and (BACKEND != 'tty'):
     exit(11) # provide exit status 11 for systemd-service
 
 #--------------------------------------------------FUNCTIONS
