@@ -10,9 +10,11 @@ from sys import stdout
 
 #--------------------------------------------------DEFAULTS
 
-VERSION = '0.4'
+VERSION = '1.4'
 
 DISPLAY = getenv('DISPLAY')
+
+ONCE = False
 
 SIMULATE = False
 
@@ -153,7 +155,8 @@ argparser = ArgumentParser(prog='blugon', description="A simple Blue Light Filte
 
 argparser.add_argument('-v', '--version', action='store_true', dest='version', help='print version and exit')
 argparser.add_argument('-p', '--printconfig', action='store_true', dest='printconfig', help='print default configuration and exit')
-argparser.add_argument('-s', '--simulation', action='store_true', dest='simulate', help="simulate 'blugon' over one day and exit")
+argparser.add_argument('-o', '--once', action='store_true', dest='once', help='apply configuration for current time and exit')
+argparser.add_argument('-s', '--simulation', action='store_true', dest='simulate', help='simulate blugon over one day and exit')
 argparser.add_argument('-i', '--interval', nargs='?', dest='interval', type=float, help='set %(dest)s in seconds (default: '+str(INTERVAL)+')')
 argparser.add_argument('-c', '--config', nargs='?', dest='config_dir', type=str, help='set configuration directory (default: '+CONFIG_DIR+')')
 argparser.add_argument('-b', '--backend', nargs='?', dest='backend', type=str, help='set backend (default: '+BACKEND+')')
@@ -190,6 +193,8 @@ if args.version:
 if args.printconfig:
     confparser.write(stdout)
     exit()
+
+ONCE = args.once
 
 SIMULATE = args.simulate
 
@@ -348,6 +353,10 @@ def main():
         except:
             exit()
         return
+
+    if ONCE:
+        while_body(get_minute(), 0)
+        exit()
 
     if SIMULATE:
         current_minute = get_minute()
