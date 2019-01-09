@@ -13,6 +13,7 @@ To run blugon with systemd you can enable the service as user:
 `systemctl --user enable blugon.service`
 
 ### Options:
+- `-o` or `--once` to apply gamma values of the current time
 - `-s` or `--simulation` to quickly simulate the configuration for the whole day
 - `-i [secs]` or `--interval=[secs]` to set time between refreshes
 - `-c [dir]` or `--config=[dir]` to specify configuration directory
