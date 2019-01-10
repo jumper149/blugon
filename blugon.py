@@ -183,6 +183,10 @@ argparser.add_argument('-b', '--backend', nargs='?', dest='backend', type=str, h
 
 args = argparser.parse_args()
 
+if args.version:
+    print('blugon ' + VERSION)
+    exit()
+
 #--------------------------------------------------CONFIG
 
                                                #---ARGUMENTS
@@ -218,20 +222,15 @@ confparser['tty'] = {
         'color14': str(COLOR_TABLE[14]),
         'color15': str(COLOR_TABLE[15])}
 
-confparser.read(CONFIG_FILE_CONFIG)
+if args.printconfig:
+    confparser.write(stdout)
+    exit()
 
+confparser.read(CONFIG_FILE_CONFIG)
 
 confs = confparser['main']
 
 #--------------------------------------------------ARGUMENTS
-
-if args.version:
-    print('blugon ' + VERSION)
-    exit()
-
-if args.printconfig:
-    confparser.write(stdout)
-    exit()
 
 ONCE = args.once
 
