@@ -41,6 +41,8 @@ To use the default configuration you can use:
 
 ## Dependencies
 - `python`
+- `libx11`
+- `libxrandr`
 ### optional:
 - `xorg-xgamma` as backend
 
