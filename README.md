@@ -44,8 +44,6 @@ To use the default configuration you can use:
 ### optional:
 - `xorg-xgamma` as backend
 
-Choose atleast one backend. `scg` is the recommended backend. `xorg-xgamma` is probably most compatible with any system.
-
 ## Install
 For Archlinux users I am maintaining an [AUR-Package](https://aur.archlinux.org/packages/blugon).
 
