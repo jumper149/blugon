@@ -353,7 +353,7 @@ def call_scg(red_gamma, green_gamma, blue_gamma):
     str_red_gamma = str(red_gamma)
     str_green_gamma = str(green_gamma)
     str_blue_gamma = str(blue_gamma)
-    check_call(['scg', str_red_gamma, str_green_gamma, str_blue_gamma])
+    check_call([MAKE_INSTALL_PREFIX + '/lib/blugon/scg', str_red_gamma, str_green_gamma, str_blue_gamma])
     return
 
 def call_tty(red_gamma, green_gamma, blue_gamma):

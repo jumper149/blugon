@@ -27,7 +27,7 @@ Append the following piece of code to your `~/.bashrc` to run blugon when you lo
 - `-b [backend]` or `--backend=[backend]` to choose the backend for communication with X11
 
 ### available backends:
-- `xgamma` - most compatible
+- `xgamma` - most compatible, requires optional dependency
 - `scg` - best result
 - `tty` - to run blugon on your TTY
 
@@ -43,7 +43,6 @@ To use the default configuration you can use:
 - `python`
 ### optional:
 - `xorg-xgamma` as backend
-- `scg` as backend @ [GitHub](https://github.com/jumper149/scg), [AUR](https://aur.archlinux.org/packages/scg)
 
 Choose atleast one backend. `scg` is the recommended backend. `xorg-xgamma` is probably most compatible with any system.
 

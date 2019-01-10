@@ -1,6 +1,7 @@
 PREFIX := /usr
 
 build:
+	gcc -std=c99 -O2 -I /usr/X11R6/include -o backends/scg/scg backends/scg/scg.c -L /usr/X11R6/lib -lm -lX11 -lXrandr
 	gzip --force --keep blugon.1
 
 install:
@@ -11,7 +12,8 @@ install:
 	install -d $(DESTDIR)$(PREFIX)/lib/systemd/user/
 	install -m644 systemd/user/blugon.service $(DESTDIR)$(PREFIX)/lib/systemd/user/
 	install -d $(DESTDIR)$(PREFIX)/lib/blugon/
-	install -m755 backends/tty.sh $(DESTDIR)$(PREFIX)/lib/blugon/
+	install -m755 backends/tty/tty.sh $(DESTDIR)$(PREFIX)/lib/blugon/
+	install -m755 backends/scg/scg $(DESTDIR)$(PREFIX)/lib/blugon/
 	install -d $(DESTDIR)$(PREFIX)/share/blugon/configs/default/
 	install -m644 configs/default/gamma $(DESTDIR)$(PREFIX)/share/blugon/configs/default/
 	install -d $(DESTDIR)$(PREFIX)/share/blugon/configs/extreme/
