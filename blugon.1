@@ -77,6 +77,18 @@ Available backends are:
     scg
     tty
 
+.SH EXAMPLES
+To just apply the blue filter and then exit use:
+
+    $ blugon --once
+
+You can run blugon in your tty with appending the following code to your ~/.bashrc:
+
+    $ if [ "$TERM" = "linux" ]; then
+    $   blugon --once --backend="tty" && clear
+    $   (blugon --backend="tty")&
+    $ fi
+
 .SH SEE ALSO
 xgamma(8)
 .SH BUGS
