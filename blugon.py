@@ -27,7 +27,7 @@ if not CONFIG_DIR:
     CONFIG_DIR = getenv('HOME') + '/.config'
 CONFIG_DIR += '/blugon'
 
-BACKEND = 'xgamma'
+BACKEND = 'scg'
 
 #--------------------------------------------------DEFINITIONS
 
