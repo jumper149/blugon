@@ -12,12 +12,24 @@ To run it in the background just use `(blugon&)` and stop it with `killall blugo
 To run blugon with systemd you can enable the service as user:
 `systemctl --user enable blugon.service`
 
+Append the following piece of code to your `~/.bashrc` to run blugon when you log into your TTY:
+
+    if [ "$TERM" = "linux" ]; then
+      blugon --once --backend="tty" && clear
+      (blugon --backend="tty")&
+    fi
+
 ### Options:
 - `-o` or `--once` to apply gamma values of the current time
 - `-s` or `--simulation` to quickly simulate the configuration for the whole day
 - `-i [secs]` or `--interval=[secs]` to set time between refreshes
 - `-c [dir]` or `--config=[dir]` to specify configuration directory
 - `-b [backend]` or `--backend=[backend]` to choose the backend for communication with X11
+
+### available backends:
+- `xgamma` - most compatible
+- `scg` - best result
+- `tty` - to run blugon on your TTY
 
 ## Configuration
 Examples for configurations can be found in `/usr/share/blugon/configs/`.
