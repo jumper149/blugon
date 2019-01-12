@@ -80,6 +80,7 @@ if not CONFIG_DIR.endswith('/'):
     CONFIG_DIR += '/'
 CONFIG_FILE_GAMMA = CONFIG_DIR + 'gamma'
 CONFIG_FILE_GAMMA_FALLBACK = MAKE_INSTALL_PREFIX + '/share/blugon/configs/default/gamma'
+CONFIG_FILE_TEMP = CONFIG_DIR + 'temp'
 CONFIG_FILE_CONFIG = CONFIG_DIR + 'config'
                                                #---ARGUMENTS END
 
@@ -131,51 +132,14 @@ if not BACKEND in BACKEND_LIST:
     raise ValueError('backend not found, choose from:\n    ' + '\n    '.join(BACKEND_LIST))
 
 if (not DISPLAY) and (BACKEND != 'tty'):
-    exit(11) # provide exit status 11 for systemd-service
+    exit(11)                             # provide exit status 11 for systemd-service
 
 #--------------------------------------------------FUNCTIONS
 
-def read_gamma():
-    """
-    reads configuration of gamma values from CONFIG_FILE_GAMMA
-    returns 2 lists: gamma, minutes
-    """
-    def line_to_list(line):
-        str_list = line.split()
-        if not str_list: # remove empty line
-            return False
-        if str_list[0].startswith('#'): # remove comment
-            return False
-        float_list = list(map(float, str_list)) # gamma values
-        return float_list
-    def check_len(ls):
-        if not (len(ls)==5):
-            raise ValueError('gamma configuration requires syntax:\n    [hour] [minute]   [red-gamma] [green-gamma] [blue-gamma]')
-    def time_to_minutes(ls):
-        ls[0] = int(60 * ls[0] + ls[1])
-        del ls[1]
-        return ls
-    def take_first(ls):
-        return ls[0]
-    def pop_first(ls):
-        x = ls[0]
-        del ls[0]
-        return x
-
-    try:
-        file_gamma = open(CONFIG_FILE_GAMMA, 'r')
-    except:
-        #print('Using fallback gamma configuration file: \'' + CONFIG_FILE_GAMMA_FALLBACK + '\'')
-        file_gamma = open(CONFIG_FILE_GAMMA_FALLBACK, 'r')
-    unfiltered_gamma = list(map(line_to_list, file_gamma.read().splitlines()))
-    file_gamma.close()
-
-    gamma = list(filter(lambda x : x, unfiltered_gamma))
-    list(filter(check_len, gamma))
-    gamma = list(map(time_to_minutes, gamma))
-    gamma.sort(key=take_first)
-    minutes = (list(map(pop_first, gamma)))
-    return gamma, minutes
+def verbose_print(string):
+    if VERBOSE:
+        print(string)
+    return
 
 def temp_to_gamma(temp):
     """
@@ -191,28 +155,78 @@ def temp_to_gamma(temp):
 
     temp = temp / 100
 
-    if temp <= 66: # red
+    if temp <= 66:                               # red
         r = 255
     else:
         r = temp - 60
         r = 329.698727446 * (r ** -0.1332047592)
 
-    if temp <= 66: # green
+    if temp <= 66:                               # green
         g = temp
         g = 99.4708025861 * math.log(g) - 161.1195681661
     else:
         g = temp - 60
         g = 288.1221695283 * (g ** -0.0755148492)
 
-    if temp <= 10: # blue
+    if temp <= 10:                               # blue
         b = 0
     elif temp >= 66:
         b = 255
     else:
         b = temp - 10
-        b = 138.5177312231 * math.log(b) - 305.0447927307 # can there still be an ln(0)-error
+        b = 138.5177312231 * math.log(b) - 305.0447927307
 
     return map(rgb_to_gamma, (r, g, b))
+
+def read_gamma():
+    """
+    Reads configuration of Gamma values from 'CONFIG_FILE_GAMMA'
+    Returns 2 lists: gamma, minutes
+    """
+    def line_to_list(line):
+        str_ls = line.split()
+        if not str_ls:                    # remove empty line
+            return False
+        if str_ls[0].startswith('#'):     # remove comment
+            return False
+        flt_ls = list(map(float, str_ls)) # to gamma values
+        return flt_ls
+    def check_length(ls):
+        length = len(ls)
+        if (not (length==5 or length==3)):
+            raise ValueError('gamma configuration requires syntax:\n'
+                    '    [hour] [minute]   [red-gamma] [green-gamma] [blue-gamma]\n'
+                    'or  [hour] [minute]   [temperature]')
+        if length==3:                      # handle temperature configuration
+            r, g, b = temp_to_gamma(ls[2])
+            del ls[2]
+            ls = ls + [r, g, b]
+        return ls
+    def time_to_minutes(ls):
+        ls[0] = int(60 * ls[0] + ls[1])
+        del ls[1]
+        return ls
+    def take_first(ls):
+        return ls[0]
+    def pop_first(ls):
+        x = ls[0]
+        del ls[0]
+        return x
+
+    try:
+        file_gamma = open(CONFIG_FILE_GAMMA, 'r')
+    except:
+        verbose_print('Using fallback gamma configuration file: \'' + CONFIG_FILE_GAMMA_FALLBACK + '\'')
+        file_gamma = open(CONFIG_FILE_GAMMA_FALLBACK, 'r')
+    gamma = list(map(line_to_list, file_gamma.read().splitlines()))
+    file_gamma.close()
+
+    gamma = list(filter(lambda x : x, gamma)) # removes empty lines and comments
+    gamma = list(map(check_length, gamma))    # sanity check, temperature to gamma
+    gamma = list(map(time_to_minutes, gamma))
+    gamma.sort(key=take_first)                # sort by time
+    minutes = (list(map(pop_first, gamma)))
+    return gamma, minutes
 
 def calc_gamma(minute, list_minutes, list_gamma):
     """calculates the RGB gamma values"""
