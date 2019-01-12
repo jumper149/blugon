@@ -34,10 +34,11 @@ Append the following piece of code to your `~/.bashrc` to run blugon when you lo
 ## Configuration
 Examples for configurations can be found in `/usr/share/blugon/configs/`.
 
-To use the default configuration you can use:
-- `mkdir -p ~/.config/blugon/`
-- `cp /usr/share/blugon/configs/default/gamma ~/.config/blugon/gamma`
-- `blugon --printconfig > ~/.config/blugon/config`
+To use the default configuration as a template you can use:
+
+    mkdir -p ~/.config/blugon/
+    cp /usr/share/blugon/configs/default/gamma ~/.config/blugon/gamma
+    blugon --printconfig > ~/.config/blugon/config
 
 ## Dependencies
 - `python`
@@ -54,6 +55,3 @@ If you are on Linux you can build and install:
 - `make install`
 
 Configuration is supposed to be done after installing.
-
-You can also use the script without installing it:
-  `/usr/bin/python3 blugon`
