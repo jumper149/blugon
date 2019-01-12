@@ -229,7 +229,7 @@ def read_gamma():
     return gamma, minutes
 
 def calc_gamma(minute, list_minutes, list_gamma):
-    """calculates the RGB gamma values"""
+    """Calculates the RGB Gamma values inbetween configured times"""
     next_index = list_minutes.index(next((x for x in list_minutes if x >= minute), list_minutes[0]))
     next_minute = list_minutes[next_index]
     prev_minute = list_minutes[next_index - 1]
@@ -237,7 +237,7 @@ def calc_gamma(minute, list_minutes, list_gamma):
         next_minute += MAX_MINUTE
 
     def inbetween_gamma(next_gamma, prev_gamma):
-        """calculates gamma value with linear regression"""
+        """Calculates Gamma value with a linear function"""
         diff_gamma = next_gamma - prev_gamma
         diff_minute = next_minute - prev_minute
         add_minute = minute - prev_minute
@@ -262,7 +262,7 @@ def calc_gamma(minute, list_minutes, list_gamma):
     return red_gamma, green_gamma, blue_gamma
 
 def call_xgamma(red_gamma, green_gamma, blue_gamma):
-    """start subprocess of backend xorg-xgamma"""
+    """Start a subprocess of backend xorg-xgamma"""
     str_red_gamma = str(red_gamma)
     str_green_gamma = str(green_gamma)
     str_blue_gamma = str(blue_gamma)
@@ -270,7 +270,7 @@ def call_xgamma(red_gamma, green_gamma, blue_gamma):
     return
 
 def call_scg(red_gamma, green_gamma, blue_gamma):
-    """start subprocess of backend scg"""
+    """Start a subprocess of backend scg"""
     str_red_gamma = str(red_gamma)
     str_green_gamma = str(green_gamma)
     str_blue_gamma = str(blue_gamma)
@@ -278,7 +278,7 @@ def call_scg(red_gamma, green_gamma, blue_gamma):
     return
 
 def call_tty(red_gamma, green_gamma, blue_gamma):
-    """start subprocess of backend tty"""
+    """Start a subprocess of backend tty"""
     def hex_tempered(i):
         color = COLOR_TABLE[i]
         def flt_to_hex(flt):
@@ -295,7 +295,7 @@ def call_tty(red_gamma, green_gamma, blue_gamma):
     return
 
 def call_backend(backend, red_gamma, green_gamma, blue_gamma):
-    """wrapper to call various backends"""
+    """Wrapper to call various backends"""
     if backend == 'xgamma':
         call_xgamma(red_gamma, green_gamma, blue_gamma)
     elif backend == 'scg':
@@ -305,13 +305,13 @@ def call_backend(backend, red_gamma, green_gamma, blue_gamma):
     return
 
 def get_minute():
-    """returns the current minute"""
+    """Returns the current minute"""
     time_struct = time.localtime()
     minute = 60 * time_struct.tm_hour + time_struct.tm_min + time_struct.tm_sec / 60
     return minute
 
 def reprint_time(minute):
-    """prints time in a human readable format"""
+    """Prints time in a human readable format"""
     str_hour = ('00' + str(int(minute // 60)))[-2:]
     str_minute = ('00' + str(int(minute % 60)))[-2:]
     print('\r' + str_hour + ':' + str_minute, end='')
@@ -323,7 +323,7 @@ def main():
     LIST_GAMMA, LIST_MINUTES = read_gamma()
 
     def while_body(minute, sleep_time=0):
-        """puts everything together to have only one function to call"""
+        """Puts everything together to have only one function to call"""
         red_gamma, green_gamma, blue_gamma = calc_gamma(minute, LIST_MINUTES, LIST_GAMMA)
         call_backend(BACKEND, red_gamma, green_gamma, blue_gamma)
         try:
