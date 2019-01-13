@@ -49,7 +49,7 @@ int main(int argc, char **argv) {
 }
 
 /*
- * This program is based on 'sct'
+ * This program is based on 'sct'.
  * Source: https://https.www.google.com.tedunangst.com/flak/post/sct-set-color-temperature
  *         https://https.www.google.com.tedunangst.com/flak/files/sct.c
  */
