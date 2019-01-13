@@ -14,6 +14,8 @@ MAKE_INSTALL_PREFIX = '/usr'
 
 VERSION = '1.6'
 
+VERBOSE = False
+
 DISPLAY = getenv('DISPLAY')
 
 ONCE = False
