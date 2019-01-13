@@ -33,25 +33,25 @@ BACKEND = 'scg'
 
 MAX_MINUTE = 24 * 60
 
-COLOR_TABLE = {
-        0:  '282a2e',
-        1:  'a54242',
-        2:  '8c9440',
-        3:  'de935f',
-        4:  '5f819d',
-        5:  '85678f',
-        6:  '5e8d87',
-        7:  '707880',
-        8:  '373b41',
-        9:  'cc6666',
-        10: 'b5bd68',
-        11: 'f0c674',
-        12: '81a2be',
-        13: 'b294bb',
-        14: '8abeb7',
-        15: 'c5c8c6'}
-
 BACKEND_LIST = [ 'xgamma', 'scg', 'tty' ]
+
+COLOR_TABLE = {       # VGA colors from https://en.wikipedia.org/wiki/ANSI_escape_code
+        0:  '000000',
+        1:  'aa0000',
+        2:  '00aa00',
+        3:  'aa5500',
+        4:  '0000aa',
+        5:  'aa00aa',
+        6:  '00aaaa',
+        7:  'aaaaaa',
+        8:  '555555',
+        9:  'ff5555',
+        10: '55ff55',
+        11: 'ffff55',
+        12: '5555ff',
+        13: 'ff55ff',
+        14: '55ffff',
+        15: 'ffffff'}
 
 #--------------------------------------------------PARSER
 
@@ -133,6 +133,9 @@ if not BACKEND in BACKEND_LIST:
 
 if (not DISPLAY) and (BACKEND != 'tty'):
     exit(11)                             # provide exit status 11 for systemd-service
+
+for i in range(15):
+    COLOR_TABLE[i] = confparser['tty'].get('color' + str(i))
 
 #--------------------------------------------------FUNCTIONS
 
