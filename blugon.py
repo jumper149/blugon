@@ -10,7 +10,7 @@ from sys import stdout
 
 MAKE_INSTALL_PREFIX = '/usr'
 
-#--------------------------------------------------DEFAULTS
+#----------------------------------------------------------------------DEFAULTS
 
 VERSION = '1.6'
 
@@ -31,7 +31,7 @@ CONFIG_DIR += '/blugon'
 
 BACKEND = 'scg'
 
-#--------------------------------------------------DEFINITIONS
+#----------------------------------------------------------------------DEFINITIONS
 
 MAX_MINUTE = 24 * 60
 
@@ -55,17 +55,24 @@ COLOR_TABLE = {       # VGA colors from https://en.wikipedia.org/wiki/ANSI_escap
         14: '55ffff',
         15: 'ffffff'}
 
-#--------------------------------------------------PARSER
+#----------------------------------------------------------------------PARSER
 
 argparser = ArgumentParser(prog='blugon', description="A simple Blue Light Filter for X")
 
-argparser.add_argument('-v', '--version', action='store_true', dest='version', help='print version and exit')
-argparser.add_argument('-p', '--printconfig', action='store_true', dest='printconfig', help='print default configuration and exit')
-argparser.add_argument('-o', '--once', action='store_true', dest='once', help='apply configuration for current time and exit')
-argparser.add_argument('-s', '--simulation', action='store_true', dest='simulate', help='simulate blugon over one day and exit')
-argparser.add_argument('-i', '--interval', nargs='?', dest='interval', type=float, help='set %(dest)s in seconds (default: '+str(INTERVAL)+')')
-argparser.add_argument('-c', '--config', nargs='?', dest='config_dir', type=str, help='set configuration directory (default: '+CONFIG_DIR+')')
-argparser.add_argument('-b', '--backend', nargs='?', dest='backend', type=str, help='set backend (default: '+BACKEND+')')
+argparser.add_argument('-v', '--version', action='store_true',
+        dest='version', help='print version and exit')
+argparser.add_argument('-p', '--printconfig', action='store_true',
+        dest='printconfig', help='print default configuration and exit')
+argparser.add_argument('-o', '--once', action='store_true',
+        dest='once', help='apply configuration for current time and exit')
+argparser.add_argument('-s', '--simulation', action='store_true',
+        dest='simulate', help='simulate blugon over one day and exit')
+argparser.add_argument('-i', '--interval', nargs='?',
+        dest='interval', type=float, help='set %(dest)s in seconds (default: '+str(INTERVAL)+')')
+argparser.add_argument('-c', '--config', nargs='?',
+        dest='config_dir', type=str, help='set configuration directory (default: '+CONFIG_DIR+')')
+argparser.add_argument('-b', '--backend', nargs='?',
+        dest='backend', type=str, help='set backend (default: '+BACKEND+')')
 
 args = argparser.parse_args()
 
@@ -73,9 +80,9 @@ if args.version:
     print('blugon ' + VERSION)
     exit()
 
-#--------------------------------------------------CONFIG
+#----------------------------------------------------------------------CONFIG
 
-                                               #---ARGUMENTS
+                                                                   #---ARGUMENTS
 if args.config_dir:
     CONFIG_DIR = args.config_dir
 if not CONFIG_DIR.endswith('/'):
@@ -84,7 +91,7 @@ CONFIG_FILE_GAMMA = CONFIG_DIR + 'gamma'
 CONFIG_FILE_GAMMA_FALLBACK = MAKE_INSTALL_PREFIX + '/share/blugon/configs/default/gamma'
 CONFIG_FILE_TEMP = CONFIG_DIR + 'temp'
 CONFIG_FILE_CONFIG = CONFIG_DIR + 'config'
-                                               #---ARGUMENTS END
+                                                                   #---ARGUMENTS END
 
 confparser = ConfigParser()
 confparser['main'] = {
@@ -117,7 +124,7 @@ confparser.read(CONFIG_FILE_CONFIG)
 
 confs = confparser['main']
 
-#--------------------------------------------------ARGUMENTS
+#----------------------------------------------------------------------ARGUMENTS
 
 ONCE = args.once
 
@@ -139,7 +146,7 @@ if (not DISPLAY) and (BACKEND != 'tty'):
 for i in range(15):
     COLOR_TABLE[i] = confparser['tty'].get('color' + str(i))
 
-#--------------------------------------------------FUNCTIONS
+#----------------------------------------------------------------------FUNCTIONS
 
 def verbose_print(string):
     if VERBOSE:
@@ -221,7 +228,8 @@ def read_gamma():
     try:
         file_gamma = open(CONFIG_FILE_GAMMA, 'r')
     except:
-        verbose_print('Using fallback gamma configuration file: \'' + CONFIG_FILE_GAMMA_FALLBACK + '\'')
+        verbose_print('Using fallback gamma configuration file: \'' +
+                CONFIG_FILE_GAMMA_FALLBACK + '\'')
         file_gamma = open(CONFIG_FILE_GAMMA_FALLBACK, 'r')
     gamma = list(map(line_to_list, file_gamma.read().splitlines()))
     file_gamma.close()
@@ -271,7 +279,8 @@ def call_xgamma(red_gamma, green_gamma, blue_gamma):
     str_red_gamma = str(red_gamma)
     str_green_gamma = str(green_gamma)
     str_blue_gamma = str(blue_gamma)
-    check_call(['xgamma', '-quiet', '-rgamma', str_red_gamma, '-ggamma', str_green_gamma, '-bgamma', str_blue_gamma])
+    check_call(['xgamma', '-quiet', '-rgamma', str_red_gamma,
+        '-ggamma', str_green_gamma, '-bgamma', str_blue_gamma])
     return
 
 def call_scg(red_gamma, green_gamma, blue_gamma):
@@ -279,7 +288,8 @@ def call_scg(red_gamma, green_gamma, blue_gamma):
     str_red_gamma = str(red_gamma)
     str_green_gamma = str(green_gamma)
     str_blue_gamma = str(blue_gamma)
-    check_call([MAKE_INSTALL_PREFIX + '/lib/blugon/scg', str_red_gamma, str_green_gamma, str_blue_gamma])
+    check_call([MAKE_INSTALL_PREFIX + '/lib/blugon/scg',
+        str_red_gamma, str_green_gamma, str_blue_gamma])
     return
 
 def call_tty(red_gamma, green_gamma, blue_gamma):
@@ -322,7 +332,7 @@ def reprint_time(minute):
     print('\r' + str_hour + ':' + str_minute, end='')
     return
 
-#--------------------------------------------------MAIN
+#----------------------------------------------------------------------MAIN
 
 def main():
     LIST_GAMMA, LIST_MINUTES = read_gamma()
