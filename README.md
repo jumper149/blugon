@@ -1,12 +1,12 @@
 # blugon
 **A simple Blue Light Filter for X written in Python**
 
-![blugon-comparison](https://i.imgur.com/iiQ1Y9b.png)
-![blugon-simulation](https://thumbs.gfycat.com/LeanSnappyGemsbok.webp)
-
 blugon is a simple and fast Blue Light Filter, that is highly configurable within your Dotfiles and provides a command line interface.
 The program can be run just once or as a daemon (manually or via systemd).
 There are several different backends available.
+
+![blugon-comparison](https://i.imgur.com/iiQ1Y9b.png)
+![blugon-simulation](https://thumbs.gfycat.com/LeanSnappyGemsbok.webp)
 
 ## Usage
 You can start blugon from the command line with `blugon`.
