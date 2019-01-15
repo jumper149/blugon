@@ -61,6 +61,8 @@ argparser = ArgumentParser(prog='blugon', description="A simple Blue Light Filte
 
 argparser.add_argument('-v', '--version', action='store_true',
         dest='version', help='print version and exit')
+argparser.add_argument('-V', '--verbose', action='store_true',
+        dest='verbose', help='display additional information to debug')
 argparser.add_argument('-p', '--printconfig', action='store_true',
         dest='printconfig', help='print default configuration and exit')
 argparser.add_argument('-o', '--once', action='store_true',
@@ -79,6 +81,8 @@ args = argparser.parse_args()
 if args.version:
     print('blugon ' + VERSION)
     exit()
+
+VERBOSE = args.verbose
 
 #----------------------------------------------------------------------CONFIG
 
@@ -149,7 +153,7 @@ for i in range(15):
 #----------------------------------------------------------------------FUNCTIONS
 
 def verbose_print(string):
-    if VERBOSE:
+    if VERBOSE and (not SIMULATE):
         print(string)
     return
 
@@ -226,6 +230,8 @@ def read_gamma():
         return x
 
     try:
+        verbose_print('Using gamma configuration file: \'' +
+                CONFIG_FILE_GAMMA + '\'')
         file_gamma = open(CONFIG_FILE_GAMMA, 'r')
     except:
         verbose_print('Using fallback gamma configuration file: \'' +
@@ -272,6 +278,8 @@ def calc_gamma(minute, list_minutes, list_gamma):
     green_gamma = inbetween_gamma(next_green, prev_green)
     blue_gamma = inbetween_gamma(next_blue, prev_blue)
 
+    verbose_print('Calculated RGB Gamma values: ' +
+            str(red_gamma) + ' ' +  str(green_gamma) + ' ' + str(blue_gamma))
     return red_gamma, green_gamma, blue_gamma
 
 def call_xgamma(red_gamma, green_gamma, blue_gamma):
@@ -311,6 +319,7 @@ def call_tty(red_gamma, green_gamma, blue_gamma):
 
 def call_backend(backend, red_gamma, green_gamma, blue_gamma):
     """Wrapper to call various backends"""
+    verbose_print('Calling backend ' + backend)
     if backend == 'xgamma':
         call_xgamma(red_gamma, green_gamma, blue_gamma)
     elif backend == 'scg':
@@ -323,6 +332,7 @@ def get_minute():
     """Returns the current minute"""
     time_struct = time.localtime()
     minute = 60 * time_struct.tm_hour + time_struct.tm_min + time_struct.tm_sec / 60
+    verbose_print('Provide current minute ' + str(minute))
     return minute
 
 def reprint_time(minute):
@@ -342,6 +352,7 @@ def main():
         red_gamma, green_gamma, blue_gamma = calc_gamma(minute, LIST_MINUTES, LIST_GAMMA)
         call_backend(BACKEND, red_gamma, green_gamma, blue_gamma)
         try:
+            verbose_print('Wait for ' + str(sleep_time) + ' seconds')
             time.sleep(sleep_time)
         except:
             exit()
