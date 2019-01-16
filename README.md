@@ -5,8 +5,8 @@ blugon is a simple and fast Blue Light Filter, that is highly configurable and p
 The program can be run just once or as a daemon (manually or via systemd).
 There are several different backends available.
 
-![blugon-comparison](https://i.imgur.com/iiQ1Y9b.png)
-![blugon-simulation](https://thumbs.gfycat.com/LeanSnappyGemsbok.webp)
+![blugon-comparison](https://github.com/jumper149/data/blob/master/blugon/comp.png?raw=true)
+![blugon-simulation](https://github.com/jumper149/data/blob/master/blugon/sim.gif?raw=true)
 
 ## Usage
 You can start blugon from the command line with `blugon`.
