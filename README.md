@@ -61,6 +61,6 @@ If you are on Linux you can build and install:
 
 To change the target directory of the installation use something similar to:
 
-    make install PREFIX=/usr/local/blugon
+    make install PREFIX=/usr/local
 
 Configuration is supposed to be done after installing.
