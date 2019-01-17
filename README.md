@@ -52,10 +52,14 @@ To use the default configuration as a template you can use:
 - `xorg-xgamma` as backend
 
 ## Install
-For Archlinux users I am maintaining an [AUR-Package](https://aur.archlinux.org/packages/blugon).
+For ArchLinux users I am maintaining an [AUR-Package](https://aur.archlinux.org/packages/blugon).
 
 If you are on Linux you can build and install:
 - `make`
 - `make install`
+
+To change the target directory of the installation use something similar to:
+
+    make install PREFIX=/usr/local/blugon
 
 Configuration is supposed to be done after installing.
