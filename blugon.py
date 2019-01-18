@@ -31,6 +31,8 @@ CONFIG_DIR += '/blugon'
 
 BACKEND = 'scg'
 
+READCURRENT = False
+
 #----------------------------------------------------------------------DEFINITIONS
 
 MAX_MINUTE = 24 * 60
@@ -75,6 +77,8 @@ argparser.add_argument('-c', '--config', nargs='?',
         dest='config_dir', type=str, help='set configuration directory (default: '+CONFIG_DIR+')')
 argparser.add_argument('-b', '--backend', nargs='?',
         dest='backend', type=str, help='set backend (default: '+BACKEND+')')
+argparser.add_argument('-r', '--readcurrent', action='store_true',
+        dest='readcurrent', help='read temperature from ' + 'config_dir/current')
 
 args = argparser.parse_args()
 
@@ -93,14 +97,15 @@ if not CONFIG_DIR.endswith('/'):
     CONFIG_DIR += '/'
 CONFIG_FILE_GAMMA = CONFIG_DIR + 'gamma'
 CONFIG_FILE_GAMMA_FALLBACK = MAKE_INSTALL_PREFIX + '/share/blugon/configs/default/gamma'
-CONFIG_FILE_TEMP = CONFIG_DIR + 'temp'
 CONFIG_FILE_CONFIG = CONFIG_DIR + 'config'
+CONFIG_FILE_CURRENT = CONFIG_DIR + 'current'
                                                                    #---ARGUMENTS END
 
 confparser = ConfigParser()
 confparser['main'] = {
-        'interval': str(INTERVAL),
-        'backend':  BACKEND      }
+        'interval':    str(INTERVAL)   ,
+        'backend':     BACKEND         ,
+        'readcurrent': str(READCURRENT)}
 
 confparser['tty'] = {
         'color0':  str(COLOR_TABLE[0]) ,
@@ -143,6 +148,10 @@ if args.backend:
     BACKEND = args.backend
 if not BACKEND in BACKEND_LIST:
     raise ValueError('backend not found, choose from:\n    ' + '\n    '.join(BACKEND_LIST))
+
+READCURRENT = confs.getboolean('readcurrent')
+if args.readcurrent:
+    READCURRENT = args.readcurrent
 
 if (not DISPLAY) and (BACKEND != 'tty'):
     exit(11)                             # provide exit status 11 for systemd-service
@@ -247,6 +256,30 @@ def read_gamma():
     minutes = (list(map(pop_first, gamma)))
     return gamma, minutes
 
+def read_current():
+    """
+    Reads temperature from 'CONFIG_FILE_CURRENT'
+    Returns 3 Gamma values as floats: red, green, blue
+    """
+    try:
+        verbose_print('Using current configuration file: \'' +
+                CONFIG_FILE_CURRENT + '\'')
+        file_current = open(CONFIG_FILE_CURRENT, 'r')
+    except:
+        raise ValueError('current configuration file not found at:\n'
+                '    ' + CONFIG_FILE_CURRENT)
+    try:
+        temp = float(file_current.readline())
+    except:
+        raise ValueError('current configuration file requires syntax:\n'
+                '    [temp]\n'
+                'temperature value as float, nothing else, no whitespace etc.')
+    file_current.close()
+
+    r, g, b = temp_to_gamma(temp)
+    verbose_print('Calculated RGB Gamma values: ' + str(r) + ' ' +  str(g) + ' ' + str(b))
+    return r, g, b
+
 def calc_gamma(minute, list_minutes, list_gamma):
     """Calculates the RGB Gamma values inbetween configured times"""
     next_index = list_minutes.index(next((x for x in list_minutes if x >= minute), list_minutes[0]))
@@ -345,11 +378,17 @@ def reprint_time(minute):
 #----------------------------------------------------------------------MAIN
 
 def main():
-    LIST_GAMMA, LIST_MINUTES = read_gamma()
+    if READCURRENT:
+        CURRENT = read_current()
+    else:
+        LIST_GAMMA, LIST_MINUTES = read_gamma()
 
     def while_body(minute, sleep_time=0):
         """Puts everything together to have only one function to call"""
-        red_gamma, green_gamma, blue_gamma = calc_gamma(minute, LIST_MINUTES, LIST_GAMMA)
+        if READCURRENT:
+            red_gamma, green_gamma, blue_gamma = CURRENT
+        else:
+            red_gamma, green_gamma, blue_gamma = calc_gamma(minute, LIST_MINUTES, LIST_GAMMA)
         call_backend(BACKEND, red_gamma, green_gamma, blue_gamma)
         try:
             verbose_print('Wait for ' + str(sleep_time) + ' seconds')
