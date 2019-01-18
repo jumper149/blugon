@@ -11,11 +11,12 @@ blugon \- simple Blue Light Filter for X
 .RB [\|\-V\|]
 .RB [\|\-p\|]
 .RB [\|\-o\|]
+.RB [\|\-r\|]
 .RB [\|\-s\|]
 .RB [\|\-i
 .IR interval \|]
 .RB [\|\-c
-.IR config-dir \|]
+.IR directory \|]
 .RB [\|\-b
 .IR backend \|]
 
@@ -58,6 +59,11 @@ Print the default configuration to stdout and then exit.
 Apply the gamma values of the current time and then exit.
 
 .TP
+.B \-r, \-\-readcurrent
+Read temperature value from file 'current' instead of 'gamma'.
+Useful for being able to control current temperature with hotkeys or scripts in conjunction with \-\-setcurrent.
+
+.TP
 .B \-s, \-\-simulation
 Start a simulation of the chosen configuration to see how it changes over the day.
 Changing the interval will not have an effect here.
@@ -68,8 +74,8 @@ The program exits after the simulation.
 Set the time period blugon waits to refresh the gamma values of your screen in seconds.
 
 .TP
-.B \-c\  path \fR,\ \fB\-\-config=path
-Specify the path that blugon is goin to search for configuration files like 'gamma'.
+.B \-c\  path \fR,\ \fB\-\-configdir=path
+Specify the path that blugon is goin to search for configuration files like 'config, 'gamma' and 'current'.
 Path must lead to directory.
 
 .TP

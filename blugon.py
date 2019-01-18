@@ -69,16 +69,16 @@ argparser.add_argument('-p', '--printconfig', action='store_true',
         dest='printconfig', help='print default configuration and exit')
 argparser.add_argument('-o', '--once', action='store_true',
         dest='once', help='apply configuration for current time and exit')
+argparser.add_argument('-r', '--readcurrent', action='store_true',
+        dest='readcurrent', help='read temperature from (default: '+CONFIG_DIR+'/current)')
 argparser.add_argument('-s', '--simulation', action='store_true',
         dest='simulate', help='simulate blugon over one day and exit')
 argparser.add_argument('-i', '--interval', nargs='?',
         dest='interval', type=float, help='set %(dest)s in seconds (default: '+str(INTERVAL)+')')
-argparser.add_argument('-c', '--config', nargs='?',
+argparser.add_argument('-c', '--configdir', nargs='?',
         dest='config_dir', type=str, help='set configuration directory (default: '+CONFIG_DIR+')')
 argparser.add_argument('-b', '--backend', nargs='?',
         dest='backend', type=str, help='set backend (default: '+BACKEND+')')
-argparser.add_argument('-r', '--readcurrent', action='store_true',
-        dest='readcurrent', help='read temperature from ' + 'config_dir/current')
 
 args = argparser.parse_args()
 

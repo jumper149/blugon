@@ -28,7 +28,7 @@ Append the following piece of code to your `~/.bashrc` to run blugon when you lo
 - `-o` or `--once` to apply gamma values of the current time
 - `-s` or `--simulation` to quickly simulate the configuration for the whole day
 - `-i [secs]` or `--interval=[secs]` to set time between refreshes
-- `-c [dir]` or `--config=[dir]` to specify configuration directory
+- `-c [path]` or `--configdir=[path]` to specify configuration directory
 - `-b [backend]` or `--backend=[backend]` to choose the backend for communication with X11
 
 ### available backends:
