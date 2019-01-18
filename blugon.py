@@ -177,8 +177,8 @@ if args.current_temp:
 if (not DISPLAY) and (BACKEND != 'tty'):
     exit(11)                             # provide exit status 11 for systemd-service
 
-MIN_CURRENT_TEMP = confparser.['current'].getfloat('min_temp')
-MAX_CURRENT_TEMP = confparser.['current'].getfloat('max_temp')
+MIN_CURRENT_TEMP = confparser['current'].getfloat('min_temp')
+MAX_CURRENT_TEMP = confparser['current'].getfloat('max_temp')
 
 for i in range(15):
     COLOR_TABLE[i] = confparser['tty'].get('color' + str(i))
