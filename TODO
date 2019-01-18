@@ -1,2 +1,3 @@
 - other backends
 - backlight control
+- remove deprecated '--config' flag for '--configdir'
