@@ -39,8 +39,7 @@ For further help you can use the `-h` flag or the more intensive man-page:
 
 ### Options:
 - `-o` or `--once` to apply gamma values of the current time
-- `-r` or `--readcurrent` to apply color temperature set by `-S`
-- `-S` or `--setcurrent` to set the current color temperature
+- `-S` or `--setcurrent` to set or change the current color temperature
 - `-s` or `--simulation` to quickly simulate the configuration for the whole day
 - `-i [secs]` or `--interval=[secs]` to set time between refreshes
 - `-c [path]` or `--configdir=[path]` to specify configuration directory
