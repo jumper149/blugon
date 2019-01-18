@@ -15,18 +15,16 @@ You can start blugon from the command line:
     blugon
 
 To run it in the background just use:
-
-    (blugon&)         # to start
-    killall blugon    # to stop
+- `(blugon&)` to start
+- `killall blugon` to stop
 
 To run blugon with systemd you can enable the service as user:
 
     systemctl --user enable blugon.service
 
 You can use the current-mode to manually control color temperature (with keybinds for example):
-
-    blugon -setcurrent="+600"    # more blue
-    blugon -setcurrent="-600"    # more red
+- `blugon --setcurrent="+600"` for more blue
+- `blugon --setcurrent="-600"` for more red
 
 Append the following piece of code to your `~/.bashrc` to run blugon when you log into your TTY:
 
