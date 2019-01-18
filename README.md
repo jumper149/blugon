@@ -22,7 +22,7 @@ To run blugon with systemd you can enable the service as user:
 
     systemctl --user enable blugon.service
 
-You can use the current-mode to manually control color temperature (with keybinds for example):
+You can use the current-mode to manually control color temperature (with keybinds for example; doesn't need daemon):
 - `blugon --setcurrent="+600"` for more blue
 - `blugon --setcurrent="-600"` for more red
 
