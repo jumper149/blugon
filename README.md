@@ -4,18 +4,29 @@
 blugon is a simple and fast Blue Light Filter, that is highly configurable and provides a command line interface.
 The program can be run just once or as a daemon (manually or via systemd).
 There are several different backends available.
+blugon calculates the screen color from your local time and configuration.
 
 ![blugon-comparison](https://github.com/jumper149/data/blob/master/blugon/comp.png?raw=true)
 ![blugon-simulation](https://github.com/jumper149/data/blob/master/blugon/sim.gif?raw=true)
 
 ## Usage
-You can start blugon from the command line with `blugon`.
+You can start blugon from the command line:
 
-To run it in the background just use `(blugon&)` and stop it with `killall blugon`.
+    blugon
+
+To run it in the background just use:
+
+    (blugon&)         # to start
+    killall blugon    # to stop
 
 To run blugon with systemd you can enable the service as user:
 
     systemctl --user enable blugon.service
+
+You can use the current-mode to manually control color temperature (with keybinds for example):
+
+    blugon -setcurrent="+600"    # more blue
+    blugon -setcurrent="-600"    # more red
 
 Append the following piece of code to your `~/.bashrc` to run blugon when you log into your TTY:
 
@@ -23,6 +34,10 @@ Append the following piece of code to your `~/.bashrc` to run blugon when you lo
       blugon --once --backend="tty" && clear
       (blugon --backend="tty")&
     fi
+
+For further help you can use the `-h` flag or the more intensive man-page:
+
+    man blugon
 
 ### Options:
 - `-o` or `--once` to apply gamma values of the current time
