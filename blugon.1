@@ -64,6 +64,12 @@ Read temperature value from file 'current' instead of 'gamma'.
 Useful for being able to control current temperature with hotkeys or scripts in conjunction with \-\-setcurrent.
 
 .TP
+.B \-S\  temperature \fR,\ \fB\-\-setcurrent=temperature
+Set temperature value to file 'current'.
+Prepend + or - to the temperature to, instead of setting it absolutely, add or subtract the value.
+Automatically implies the \-\-readcurrent and \-\-once flags.
+
+.TP
 .B \-s, \-\-simulation
 Start a simulation of the chosen configuration to see how it changes over the day.
 Changing the interval will not have an effect here.

@@ -20,6 +20,9 @@ DISPLAY = getenv('DISPLAY')
 
 ONCE = False
 
+CURRENT_TEMP = None
+CURRENT_TEMP_ADD = False
+
 SIMULATE = False
 
 INTERVAL = 120
@@ -36,6 +39,11 @@ READCURRENT = False
 #----------------------------------------------------------------------DEFINITIONS
 
 MAX_MINUTE = 24 * 60
+
+NORMAL_TEMP = 6600.0
+
+MIN_CURRENT_TEMP = 1.0
+MAX_CURRENT_TEMP = 20000.0
 
 BACKEND_LIST = [ 'xgamma', 'scg', 'tty' ]
 
@@ -70,12 +78,14 @@ argparser.add_argument('-p', '--printconfig', action='store_true',
 argparser.add_argument('-o', '--once', action='store_true',
         dest='once', help='apply configuration for current time and exit')
 argparser.add_argument('-r', '--readcurrent', action='store_true',
-        dest='readcurrent', help='read temperature from (default: '+CONFIG_DIR+'/current)')
+        dest='readcurrent', help='read temperature from '+CONFIG_DIR+'/current and exit')
+argparser.add_argument('-S', '--setcurrent', nargs='?',
+        dest='current_temp', type=str, help='set current temperature configuration, implies -r')
 argparser.add_argument('-s', '--simulation', action='store_true',
         dest='simulate', help='simulate blugon over one day and exit')
 argparser.add_argument('-i', '--interval', nargs='?',
         dest='interval', type=float, help='set %(dest)s in seconds (default: '+str(INTERVAL)+')')
-argparser.add_argument('-c', '--configdir', nargs='?',
+argparser.add_argument('-c', '--configdir', '--config', nargs='?',
         dest='config_dir', type=str, help='set configuration directory (default: '+CONFIG_DIR+')')
 argparser.add_argument('-b', '--backend', nargs='?',
         dest='backend', type=str, help='set backend (default: '+BACKEND+')')
@@ -106,6 +116,10 @@ confparser['main'] = {
         'interval':    str(INTERVAL)   ,
         'backend':     BACKEND         ,
         'readcurrent': str(READCURRENT)}
+
+confparser['current'] = {
+        'min_temp': str(MIN_CURRENT_TEMP),
+        'max_temp': str(MAX_CURRENT_TEMP)}
 
 confparser['tty'] = {
         'color0':  str(COLOR_TABLE[0]) ,
@@ -153,8 +167,18 @@ READCURRENT = confs.getboolean('readcurrent')
 if args.readcurrent:
     READCURRENT = args.readcurrent
 
+if args.current_temp:
+    if args.current_temp[0] in ['+', '-']:
+        CURRENT_TEMP_ADD = True
+    CURRENT_TEMP = float(args.current_temp)
+    ONCE = True
+    READCURRENT = True
+
 if (not DISPLAY) and (BACKEND != 'tty'):
     exit(11)                             # provide exit status 11 for systemd-service
+
+MIN_CURRENT_TEMP = confparser.['current'].getfloat('min_temp')
+MAX_CURRENT_TEMP = confparser.['current'].getfloat('max_temp')
 
 for i in range(15):
     COLOR_TABLE[i] = confparser['tty'].get('color' + str(i))
@@ -256,10 +280,11 @@ def read_gamma():
     minutes = (list(map(pop_first, gamma)))
     return gamma, minutes
 
-def read_current():
+def read_current(return_temp=False):
     """
     Reads temperature from 'CONFIG_FILE_CURRENT'
     Returns 3 Gamma values as floats: red, green, blue
+    With argument return_temp=True return temperature value
     """
     try:
         verbose_print('Using current configuration file: \'' +
@@ -267,7 +292,9 @@ def read_current():
         file_current = open(CONFIG_FILE_CURRENT, 'r')
     except:
         raise ValueError('current configuration file not found at:\n'
-                '    ' + CONFIG_FILE_CURRENT)
+                '    ' + CONFIG_FILE_CURRENT + '\n\n' +
+                'To create this file use:\n' + '    blugon --setcurrent=' + str(NORMAL_TEMP))
+
     try:
         temp = float(file_current.readline())
     except:
@@ -276,9 +303,32 @@ def read_current():
                 'temperature value as float, nothing else, no whitespace etc.')
     file_current.close()
 
+    if return_temp:
+        return temp
+
     r, g, b = temp_to_gamma(temp)
     verbose_print('Calculated RGB Gamma values: ' + str(r) + ' ' +  str(g) + ' ' + str(b))
     return r, g, b
+
+def set_current():
+    """Sets 'CURRENT_TEMP' to 'CONFIG_FILE_CURRENT'"""
+    if CURRENT_TEMP_ADD:
+        temp = read_current(return_temp=True) + CURRENT_TEMP
+    else:
+        temp = CURRENT_TEMP
+
+    if temp < MIN_CURRENT_TEMP:
+        verbose_print('Temperature wanted to set capped at minimum ' + str(MIN_CURRENT_TEMP))
+        temp = MIN_CURRENT_TEMP
+    elif temp > MAX_CURRENT_TEMP:
+        verbose_print('Temperature wanted to set capped at maximum ' + str(MAX_CURRENT_TEMP))
+        temp = MAX_CURRENT_TEMP
+
+    verbose_print('Writing temperature ' + str(temp) +
+                ' to current configuration file: \'' + CONFIG_FILE_CURRENT + '\'')
+    with open(CONFIG_FILE_CURRENT, 'w') as file_current:
+        file_current.write(str(temp))
+    return
 
 def calc_gamma(minute, list_minutes, list_gamma):
     """Calculates the RGB Gamma values inbetween configured times"""
@@ -378,6 +428,9 @@ def reprint_time(minute):
 #----------------------------------------------------------------------MAIN
 
 def main():
+    if CURRENT_TEMP:
+        set_current()
+
     if READCURRENT:
         CURRENT = read_current()
     else:
