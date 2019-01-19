@@ -20,6 +20,8 @@ DISPLAY = getenv('DISPLAY')
 
 ONCE = False
 
+READCURRENT = False
+
 CURRENT_TEMP = None
 CURRENT_TEMP_ADD = False
 
@@ -33,8 +35,6 @@ if not CONFIG_DIR:
 CONFIG_DIR += '/blugon'
 
 BACKEND = 'scg'
-
-READCURRENT = False
 
 #----------------------------------------------------------------------DEFINITIONS
 
@@ -151,17 +151,8 @@ confs = confparser['main']
 
 ONCE = args.once
 
-SIMULATE = args.simulate
-
-INTERVAL = confs.getint('interval')
-if args.interval:
-    INTERVAL = math.ceil(args.interval)
-
-BACKEND = confs.get('backend')
-if args.backend:
-    BACKEND = args.backend
-if not BACKEND in BACKEND_LIST:
-    raise ValueError('backend not found, choose from:\n    ' + '\n    '.join(BACKEND_LIST))
+MIN_CURRENT_TEMP = confparser['current'].getfloat('min_temp')
+MAX_CURRENT_TEMP = confparser['current'].getfloat('max_temp')
 
 READCURRENT = confs.getboolean('readcurrent')
 if args.readcurrent:
@@ -174,14 +165,23 @@ if args.current_temp:
     ONCE = True
     READCURRENT = True
 
-if (not DISPLAY) and (BACKEND != 'tty'):
-    exit(11)                             # provide exit status 11 for systemd-service
+SIMULATE = args.simulate
 
-MIN_CURRENT_TEMP = confparser['current'].getfloat('min_temp')
-MAX_CURRENT_TEMP = confparser['current'].getfloat('max_temp')
+INTERVAL = confs.getint('interval')
+if args.interval:
+    INTERVAL = math.ceil(args.interval)
+
+BACKEND = confs.get('backend')
+if args.backend:
+    BACKEND = args.backend
+if not BACKEND in BACKEND_LIST:
+    raise ValueError('backend not found, choose from:\n    ' + '\n    '.join(BACKEND_LIST))
 
 for i in range(15):
     COLOR_TABLE[i] = confparser['tty'].get('color' + str(i))
+
+if (not DISPLAY) and (BACKEND != 'tty'):
+    exit(11)                             # provide exit status 11 for systemd-service
 
 #----------------------------------------------------------------------FUNCTIONS
 
