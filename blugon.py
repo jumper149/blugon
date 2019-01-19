@@ -18,6 +18,8 @@ VERBOSE = False
 
 DISPLAY = getenv('DISPLAY')
 
+WAIT_FOR_X = False
+
 ONCE = False
 
 READCURRENT = False
@@ -89,6 +91,8 @@ argparser.add_argument('-c', '--configdir', '--config', nargs='?',
         dest='config_dir', type=str, help='set configuration directory (default: '+CONFIG_DIR+')')
 argparser.add_argument('-b', '--backend', nargs='?',
         dest='backend', type=str, help='set backend (default: '+BACKEND+')')
+argparser.add_argument('-w', '--waitforx', action='store_true',
+        dest='wait_for_x', help='wait for an X-server to be found')
 
 args = argparser.parse_args()
 
@@ -115,6 +119,7 @@ confparser = ConfigParser()
 confparser['main'] = {
         'interval':    str(INTERVAL)   ,
         'backend':     BACKEND         ,
+        'wait_for_x':  str(WAIT_FOR_X) ,
         'readcurrent': str(READCURRENT)}
 
 confparser['current'] = {
@@ -177,11 +182,12 @@ if args.backend:
 if not BACKEND in BACKEND_LIST:
     raise ValueError('backend not found, choose from:\n    ' + '\n    '.join(BACKEND_LIST))
 
+WAIT_FOR_X = confs.getboolean('wait_for_x')
+if args.wait_for_x:
+    WAIT_FOR_X = args.wait_for_x
+
 for i in range(15):
     COLOR_TABLE[i] = confparser['tty'].get('color' + str(i))
-
-if (not DISPLAY) and (BACKEND != 'tty'):
-    exit(11)                             # provide exit status 11 for systemd-service
 
 #----------------------------------------------------------------------FUNCTIONS
 
@@ -425,6 +431,18 @@ def reprint_time(minute):
     print('\r' + str_hour + ':' + str_minute, end='')
     return
 
+#----------------------------------------------------------------------SANITY
+
+if (not DISPLAY) and (BACKEND != 'tty'):
+    if WAIT_FOR_X:
+        verbose_print('Waiting for X-server')
+        while not DISPLAY:
+            time.sleep(0.1)
+            DISPLAY = getenv('DISPLAY')
+        verbose_print('Found X-server')
+    else:
+        exit(11)
+
 #----------------------------------------------------------------------MAIN
 
 def main():
@@ -442,7 +460,18 @@ def main():
             red_gamma, green_gamma, blue_gamma = CURRENT
         else:
             red_gamma, green_gamma, blue_gamma = calc_gamma(minute, LIST_MINUTES, LIST_GAMMA)
-        call_backend(BACKEND, red_gamma, green_gamma, blue_gamma)
+        try:
+            call_backend(BACKEND, red_gamma, green_gamma, blue_gamma)
+        except:
+            verbose_print('Lost X-server')
+            if WAIT_FOR_X:
+                verbose_print('Waiting for X-server')
+                while not DISPLAY:
+                    time.sleep(INTERVAL)
+                    DISPLAY = getenv('DISPLAY')
+                verbose_print('Found X-server')
+            else:
+                exit(12)
         try:
             verbose_print('Wait for ' + str(sleep_time) + ' seconds')
             time.sleep(sleep_time)
