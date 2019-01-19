@@ -99,9 +99,8 @@ Available backends are:
 
 .TP
 .B \-w, \-\-waitforx
-Prevents exiting with status 11 or 12.
-Instead the program waits until the DISPLAY environment variable is set and continues.
-This is automatically used by the systemd service to prevent failing on startup.
+Instead of crashing when the backend fails the program will continue.
+This is automatically used by the systemd service to prevent failing when switching to another TTY.
 
 .SH EXAMPLES
 To just apply the blue filter and then exit use:

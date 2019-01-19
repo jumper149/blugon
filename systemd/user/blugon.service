@@ -7,6 +7,7 @@ After=graphical-session.target
 Type=simple
 ExecStart=/usr/bin/blugon --waitforx
 RestartForceExitStatus=11
+RestartSec=1
 
 # disallow writing to /usr, /bin, /sbin, ...
 ProtectSystem=yes

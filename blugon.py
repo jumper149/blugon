@@ -92,7 +92,7 @@ argparser.add_argument('-c', '--configdir', '--config', nargs='?',
 argparser.add_argument('-b', '--backend', nargs='?',
         dest='backend', type=str, help='set backend (default: '+BACKEND+')')
 argparser.add_argument('-w', '--waitforx', action='store_true',
-        dest='wait_for_x', help='wait for an X-server to be found')
+        dest='wait_for_x', help='continue when backend fails')
 
 args = argparser.parse_args()
 
@@ -434,14 +434,8 @@ def reprint_time(minute):
 #----------------------------------------------------------------------SANITY
 
 if (not DISPLAY) and (BACKEND != 'tty'):
-    if WAIT_FOR_X:
-        verbose_print('Waiting for X-server')
-        while not DISPLAY:
-            time.sleep(0.1)
-            DISPLAY = getenv('DISPLAY')
-        verbose_print('Found X-server')
-    else:
-        exit(11)
+    verbose_print('DISPLAY environment variable not set')
+    exit(11)
 
 #----------------------------------------------------------------------MAIN
 
@@ -460,18 +454,14 @@ def main():
             red_gamma, green_gamma, blue_gamma = CURRENT
         else:
             red_gamma, green_gamma, blue_gamma = calc_gamma(minute, LIST_MINUTES, LIST_GAMMA)
-        try:
-            call_backend(BACKEND, red_gamma, green_gamma, blue_gamma)
-        except:
-            verbose_print('Lost X-server')
-            if WAIT_FOR_X:
+        if WAIT_FOR_X: # allows switching to another TTY
+            try:
+                call_backend(BACKEND, red_gamma, green_gamma, blue_gamma)
+            except:
                 verbose_print('Waiting for X-server')
-                while not DISPLAY:
-                    time.sleep(INTERVAL)
-                    DISPLAY = getenv('DISPLAY')
-                verbose_print('Found X-server')
-            else:
-                exit(12)
+                time.sleep(INTERVAL)
+        else:
+            call_backend(BACKEND, red_gamma, green_gamma, blue_gamma)
         try:
             verbose_print('Wait for ' + str(sleep_time) + ' seconds')
             time.sleep(sleep_time)
