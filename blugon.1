@@ -32,14 +32,25 @@ You can get a 'config' file with default values by using:
 
     $ blugon --printconfig > ~/.config/blugon/config
 
-You can copy the standard 'gamma' configuration into your home directory:
+You can copy the default 'gamma' configuration into your home directory:
 
     $ cp /usr/share/blugon/configs/default/gamma ~/.config/blugon/
+
+There are more templates for 'gamma' in "/usr/share/blugon/".
+Syntax in 'gamma' has to be in one of the following two forms:
+
+    $ [hour] [minute]   [red]   [green] [blue]  
+    $ [hour] [minute]   [temperature]
+
+[red], [green], [blue] between 0 and 1
+
+[temperature] between 1000 (red) and 20000 (blue), default is 6600
 
 You can enable the systemd service as user:
 
     $ systemctl --user enable blugon.service
 
+In 'current' the color temperature for \-\-readcurrent is stored.
 .SH OPTIONS
 .TP
 .B \-h, \-\-help
@@ -107,7 +118,7 @@ To just apply the blue filter and then exit use:
 
     $ blugon --once
 
-You can run blugon in your tty with appending the following code to your ~/.bashrc:
+You can run blugon in your tty with appending the following code to your "~/.bashrc":
 
     $ if [ "$TERM" = "linux" ]; then
     $   blugon --once --backend="tty" && clear
@@ -116,7 +127,11 @@ You can run blugon in your tty with appending the following code to your ~/.bash
 
 .SH SEE ALSO
 xgamma(8)
-.SH BUGS
-No known bugs.
+.SH PROBLEMS
+If you have trouble enabling the systemd service, but starting it later on works fine, try increasing the time before restarting (blugon will restart if it cannot find the X-Server) in 'config' (example with 3 seconds):
+
+    $ [wait_for_x]
+    $ sleep_after_failed_startup = 3
+
 .SH AUTHOR
 Felix Springer <felixspringer149@gmail.com>
