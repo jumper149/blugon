@@ -355,8 +355,8 @@ def calc_gamma(minute, list_minutes, list_gamma):
     def inbetween_gamma(next_gamma, prev_gamma):
         """Calculates Gamma value with a linear function"""
         diff_gamma = next_gamma - prev_gamma
-        diff_minute = next_minute - prev_minute
-        add_minute = minute - prev_minute
+        diff_minute = (next_minute - prev_minute) % MAX_MINUTE
+        add_minute = (minute - prev_minute) % MAX_MINUTE
         try:
             factor = add_minute / diff_minute
         except:
