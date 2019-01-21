@@ -119,10 +119,10 @@ CONFIG_FILE_CURRENT = CONFIG_DIR + 'current'
 
 confparser = ConfigParser()
 confparser['main'] = {
+        'readcurrent': str(READCURRENT),
         'interval':    str(INTERVAL)   ,
         'backend':     BACKEND         ,
-        'wait_for_x':  str(WAIT_FOR_X) ,
-        'readcurrent': str(READCURRENT)}
+        'wait_for_x':  str(WAIT_FOR_X) }
 
 confparser['current'] = {
         'min_temp': str(MIN_CURRENT_TEMP),
