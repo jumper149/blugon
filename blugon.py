@@ -12,13 +12,15 @@ MAKE_INSTALL_PREFIX = '/usr'
 
 #----------------------------------------------------------------------DEFAULTS
 
-VERSION = '1.8.1'
+VERSION = '1.8.2'
 
 VERBOSE = False
 
 DISPLAY = getenv('DISPLAY')
 
 WAIT_FOR_X = False
+SLEEP_AFTER_FAILED_STARTUP = 0.1
+SLEEP_AFTER_LOSING_X = 120.0
 
 ONCE = False
 
@@ -126,6 +128,10 @@ confparser['current'] = {
         'min_temp': str(MIN_CURRENT_TEMP),
         'max_temp': str(MAX_CURRENT_TEMP)}
 
+confparser['wait_for_x'] = {
+        'sleep_after_failed_startup': str(SLEEP_AFTER_FAILED_STARTUP),
+        'sleep_after_losing_x':       str(SLEEP_AFTER_LOSING_X)      }
+
 confparser['tty'] = {
         'color0':  str(COLOR_TABLE[0]) ,
         'color1':  str(COLOR_TABLE[1]) ,
@@ -185,6 +191,8 @@ if not BACKEND in BACKEND_LIST:
 WAIT_FOR_X = confs.getboolean('wait_for_x')
 if args.wait_for_x:
     WAIT_FOR_X = args.wait_for_x
+SLEEP_AFTER_FAILED_STARTUP = confparser['wait_for_x'].getfloat('sleep_after_failed_startup')
+SLEEP_AFTER_LOSING_X = confparser['wait_for_x'].getfloat('sleep_after_losing_x')
 
 for i in range(15):
     COLOR_TABLE[i] = confparser['tty'].get('color' + str(i))
@@ -435,6 +443,8 @@ def reprint_time(minute):
 
 if (not DISPLAY) and (BACKEND != 'tty'):
     verbose_print('DISPLAY environment variable not set')
+    if WAIT_FOR_X:
+        time.sleep(SLEEP_AFTER_FAILED_STARTUP)
     exit(11)
 
 #----------------------------------------------------------------------MAIN
@@ -459,7 +469,7 @@ def main():
                 call_backend(BACKEND, red_gamma, green_gamma, blue_gamma)
             except:
                 verbose_print('Waiting for X-server')
-                time.sleep(INTERVAL)
+                time.sleep(SLEEP_AFTER_LOSING_X)
         else:
             call_backend(BACKEND, red_gamma, green_gamma, blue_gamma)
         try:
