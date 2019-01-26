@@ -327,15 +327,18 @@ def read_current(return_temp=False):
 def set_current():
     """Sets 'CURRENT_TEMP' to 'CONFIG_FILE_CURRENT'"""
     if CURRENT_TEMP_ADD:
-        temp = read_current(return_temp=True) + CURRENT_TEMP
+        try:
+            temp = read_current(return_temp=True) + CURRENT_TEMP
+        except:
+            temp = NORMAL_TEMP + CURRENT_TEMP
     else:
         temp = CURRENT_TEMP
 
     if temp < MIN_CURRENT_TEMP:
-        verbose_print('Temperature wanted to set capped at minimum ' + str(MIN_CURRENT_TEMP))
+        verbose_print('Temperature wanted to be set capped at minimum ' + str(MIN_CURRENT_TEMP))
         temp = MIN_CURRENT_TEMP
     elif temp > MAX_CURRENT_TEMP:
-        verbose_print('Temperature wanted to set capped at maximum ' + str(MAX_CURRENT_TEMP))
+        verbose_print('Temperature wanted to be set capped at maximum ' + str(MAX_CURRENT_TEMP))
         temp = MAX_CURRENT_TEMP
 
     verbose_print('Writing temperature ' + str(temp) +
