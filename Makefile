@@ -22,3 +22,8 @@ install:
 	install -m644 configs/extreme/gamma $(DESTDIR)$(PREFIX)/share/blugon/configs/extreme/
 	install -d $(DESTDIR)$(PREFIX)/share/blugon/configs/nothing/
 	install -m644 configs/nothing/gamma $(DESTDIR)$(PREFIX)/share/blugon/configs/nothing/
+
+clean:
+	sed --in-place "s|MAKE_INSTALL_PREFIX = '.*'|MAKE_INSTALL_PREFIX = '/usr'|g" blugon.py
+	rm backends/scg/scg
+	rm blugon.1.gz
