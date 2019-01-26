@@ -25,5 +25,5 @@ install:
 
 clean:
 	sed --in-place "s|MAKE_INSTALL_PREFIX = '.*'|MAKE_INSTALL_PREFIX = '/usr'|g" blugon.py
-	rm backends/scg/scg
-	rm blugon.1.gz
+	rm -f backends/scg/scg
+	rm -f blugon.1.gz
