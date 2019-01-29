@@ -15,16 +15,18 @@ You can start blugon from the command line:
     blugon
 
 To run it in the background just use:
-- `(blugon&)` to start
-- `killall blugon` to stop
+
+    (blugon&)         # to start
+    killall blugon    # to stop
 
 To run blugon with systemd you can enable the service as user:
 
     systemctl --user enable blugon.service
 
 You can use the current-mode to manually control color temperature (with keybinds for example; doesn't need daemon):
-- `blugon --setcurrent="+600"` for more blue
-- `blugon --setcurrent="-600"` for more red
+
+    blugon --setcurrent="+600"    # for more blue
+    blugon --setcurrent="-600"    # for more red
 
 Append the following piece of code to your `~/.bashrc` to run blugon when you log into your TTY:
 
@@ -70,11 +72,13 @@ To use the default configuration as a template you can use:
 For ArchLinux users I am maintaining an [AUR-Package](https://aur.archlinux.org/packages/blugon).
 
 If you are on Linux you can build and install:
-- `make`
-- `make install`
 
-To change the target directory of the installation use something similar to:
+    make
+    make install    # as root
 
+To change the target directory of the installation use the following and change `/usr/local/` to the desired directory:
+
+    make PREFIX=/usr/local
     make install PREFIX=/usr/local
 
 Configuration is supposed to be done after installing.
