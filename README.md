@@ -76,7 +76,7 @@ If you are on Linux you can build and install:
     make
     make install    # as root
 
-To change the target directory of the installation use the following and change `/usr/local/` to the desired directory:
+To change the target directory of the installation use the following and change `/usr/local` to the desired directory:
 
     make PREFIX=/usr/local
     make install PREFIX=/usr/local
