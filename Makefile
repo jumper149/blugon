@@ -16,12 +16,18 @@ install:
 	install -d $(DESTDIR)$(PREFIX)/lib/blugon/
 	install -m755 backends/tty/tty.sh $(DESTDIR)$(PREFIX)/lib/blugon/
 	install -m755 backends/scg/scg $(DESTDIR)$(PREFIX)/lib/blugon/
+	install -d $(DESTDIR)$(PREFIX)/share/blugon/configs/deepfried/
+	install -m644 configs/deepfried/gamma $(DESTDIR)$(PREFIX)/share/blugon/configs/deepfried/
 	install -d $(DESTDIR)$(PREFIX)/share/blugon/configs/default/
 	install -m644 configs/default/gamma $(DESTDIR)$(PREFIX)/share/blugon/configs/default/
 	install -d $(DESTDIR)$(PREFIX)/share/blugon/configs/extreme/
 	install -m644 configs/extreme/gamma $(DESTDIR)$(PREFIX)/share/blugon/configs/extreme/
 	install -d $(DESTDIR)$(PREFIX)/share/blugon/configs/nothing/
 	install -m644 configs/nothing/gamma $(DESTDIR)$(PREFIX)/share/blugon/configs/nothing/
+	install -d $(DESTDIR)$(PREFIX)/share/blugon/configs/static/
+	install -m644 configs/static/gamma $(DESTDIR)$(PREFIX)/share/blugon/configs/static/
+	install -d $(DESTDIR)$(PREFIX)/share/blugon/configs/temperature/
+	install -m644 configs/temperature/gamma $(DESTDIR)$(PREFIX)/share/blugon/configs/temperature/
 
 clean:
 	sed --in-place "s|MAKE_INSTALL_PREFIX = '.*'|MAKE_INSTALL_PREFIX = '/usr'|g" blugon.py

@@ -1,15 +1,4 @@
-#             INTERVALS
-# hour        [0, 23]
-# minute      [0, 60]
-# red         [0, 1]
-# green       [0, 1]
-# blue        [0, 1]
-# temperature [1000, 20000]
-#
 # TIME          GAMMA
-# hour minute   red    green  blue
-#
-# or:
 # hour minute   temperature
    0    0       2000
    7    0       5000
