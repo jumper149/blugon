@@ -29,6 +29,10 @@ READCURRENT = False
 CURRENT_TEMP = None
 CURRENT_TEMP_ADD = False
 
+FADE = True
+FADE_STEPS = 10
+FADE_DURATION = 3.0
+
 SIMULATE = False
 
 INTERVAL = 120
@@ -48,6 +52,10 @@ NORMAL_TEMP = 6600.0
 
 MIN_CURRENT_TEMP = 1.0
 MAX_CURRENT_TEMP = 20000.0
+
+NORMAL_RED = 1.0
+NORMAL_GREEN = 1.0
+NORMAL_BLUE = 1.0
 
 BACKEND_LIST = [ 'xgamma', 'scg', 'tty' ]
 
@@ -85,6 +93,8 @@ argparser.add_argument('-r', '--readcurrent', action='store_true',
         dest='readcurrent', help='read temperature from '+CONFIG_DIR+'/current and exit')
 argparser.add_argument('-S', '--setcurrent', nargs='?',
         dest='current_temp', type=str, help='set current temperature configuration, implies -r')
+argparser.add_argument('-f', '--fade', action='store_true',
+        dest='fade', help='slowly fade color on startup')
 argparser.add_argument('-s', '--simulation', action='store_true',
         dest='simulate', help='simulate blugon over one day and exit')
 argparser.add_argument('-i', '--interval', nargs='?',
@@ -122,7 +132,8 @@ confparser['main'] = {
         'readcurrent': str(READCURRENT),
         'interval':    str(INTERVAL)   ,
         'backend':     BACKEND         ,
-        'wait_for_x':  str(WAIT_FOR_X) }
+        'wait_for_x':  str(WAIT_FOR_X) ,
+        'fade':        str(FADE)       }
 
 confparser['current'] = {
         'min_temp': str(MIN_CURRENT_TEMP),
@@ -131,6 +142,10 @@ confparser['current'] = {
 confparser['wait_for_x'] = {
         'sleep_after_failed_startup': str(SLEEP_AFTER_FAILED_STARTUP),
         'sleep_after_losing_x':       str(SLEEP_AFTER_LOSING_X)      }
+
+confparser['fade'] = {
+        'steps':    str(FADE_STEPS)   ,
+        'duration': str(FADE_DURATION)}
 
 confparser['tty'] = {
         'color0':  str(COLOR_TABLE[0]) ,
@@ -193,6 +208,12 @@ if args.wait_for_x:
     WAIT_FOR_X = args.wait_for_x
 SLEEP_AFTER_FAILED_STARTUP = confparser['wait_for_x'].getfloat('sleep_after_failed_startup')
 SLEEP_AFTER_LOSING_X = confparser['wait_for_x'].getfloat('sleep_after_losing_x')
+
+FADE = confs.getboolean('fade')
+if args.fade:
+    FADE = args.fade
+FADE_STEPS = confparser['fade'].getint('steps')
+FADE_DURATION = confparser['fade'].getfloat('duration')
 
 for i in range(15):
     COLOR_TABLE[i] = confparser['tty'].get('color' + str(i))
@@ -442,6 +463,13 @@ def reprint_time(minute):
     print('\r' + str_hour + ':' + str_minute, end='')
     return
 
+def gamma_step(red_gamma, green_gamma, blue_gamma, max_step, step):
+    """Returns appropriate gamma values for step considering fading"""
+    red = red_gamma + (NORMAL_RED - red_gamma) * (max_step - step / step)
+    green = green_gamma + (NORMAL_GREEN - green_gamma) * (max_step - step / step)
+    blue = blue_gamma + (NORMAL_BLUE - blue_gamma) * (max_step - step / step)
+    return red, green, blue
+
 #----------------------------------------------------------------------SANITY
 
 if (not DISPLAY) and (BACKEND != 'tty'):
@@ -497,6 +525,29 @@ def main():
         print() # print newline
         while_body(current_minute)
         exit()
+
+    if FADE:
+        current_minute = get_minute()
+        steps = FADE_STEPS
+        sleep_time = FADE_DURATION / steps
+        verbose_print('Fading in ' + str(steps) + ' steps over ' + str(FADE_DURATION)  + ' seconds')
+        #--- similar to while_body()
+        if READCURRENT:
+            main_red_gamma, main_green_gamma, main_blue_gamma = CURRENT
+        else:
+            main_red_gamma, main_green_gamma, main_blue_gamma = calc_gamma(minute, LIST_MINUTES, LIST_GAMMA)
+        for step in range(0, steps):
+            red_gamma, green_gamma, blue_gamma = gamma_step(main_red_gamma, main_green_gamma, main_blue_gamma, steps, step)
+            if WAIT_FOR_X:
+                try:
+                    call_backend(BACKEND, red_gamma, green_gamma, blue_gamma)
+                except:
+                    verbose_print('X-server not found, cancel fading')
+                    return
+            else:
+                call_backend(BACKEND, red_gamma, green_gamma, blue_gamma)
+        #---
+
 
     while True :
         while_body(get_minute(), INTERVAL)
