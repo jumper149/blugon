@@ -43,6 +43,7 @@ For further help you can use the `-h` flag or the more intensive man-page:
 - `-o` or `--once` to apply gamma values of the current time
 - `-S` or `--setcurrent` to set or change the current color temperature
 - `-s` or `--simulation` to quickly simulate the configuration for the whole day
+- `-f` or `--fade` to fade in screen color on startup
 - `-i [secs]` or `--interval=[secs]` to set time between refreshes
 - `-c [path]` or `--configdir=[path]` to specify configuration directory
 - `-b [backend]` or `--backend=[backend]` to choose the backend for communication with X

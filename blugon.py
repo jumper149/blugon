@@ -12,7 +12,7 @@ MAKE_INSTALL_PREFIX = '/usr'
 
 #----------------------------------------------------------------------DEFAULTS
 
-VERSION = '1.9.1'
+VERSION = '1.10.1'
 
 VERBOSE = False
 
@@ -510,10 +510,6 @@ def main():
             exit()
         return
 
-    if ONCE:
-        while_body(get_minute(), 0)
-        exit()
-
     if SIMULATE:
         current_minute = get_minute()
         steps = 100
@@ -546,6 +542,10 @@ def main():
             else:
                 call_backend(BACKEND, red_gamma, green_gamma, blue_gamma)
             time.sleep(sleep_time)
+
+    if ONCE:
+        while_body(get_minute(), 0)
+        exit()
 
 
     while True :
