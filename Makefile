@@ -2,13 +2,13 @@ DESTDIR :=
 PREFIX := /usr
 
 build:
-	sed --in-place "s|MAKE_INSTALL_PREFIX = '.*'|MAKE_INSTALL_PREFIX = '$(PREFIX)'|g" blugon.py
+	sed "s|MAKE_INSTALL_PREFIX = '.*'|MAKE_INSTALL_PREFIX = '$(PREFIX)'|g" blugon.py > blugon
 	gcc -std=c99 -O2 -I /usr/X11R6/include -o backends/scg/scg backends/scg/scg.c -L /usr/X11R6/lib -lm -lX11 -lXrandr
 	gzip --force --keep blugon.1
 
 install:
 	install -d $(DESTDIR)$(PREFIX)/bin/
-	install -m755 blugon.py $(DESTDIR)$(PREFIX)/bin/blugon
+	install -m755 blugon $(DESTDIR)$(PREFIX)/bin/blugon
 	install -d $(DESTDIR)$(PREFIX)/share/man/man1/
 	install -m644 blugon.1.gz $(DESTDIR)$(PREFIX)/share/man/man1/
 	install -d $(DESTDIR)$(PREFIX)/lib/systemd/user/
@@ -30,6 +30,6 @@ install:
 	install -m644 configs/temperature/gamma $(DESTDIR)$(PREFIX)/share/blugon/configs/temperature/
 
 clean:
-	sed --in-place "s|MAKE_INSTALL_PREFIX = '.*'|MAKE_INSTALL_PREFIX = '/usr'|g" blugon.py
+	rm -f blugon
 	rm -f backends/scg/scg
 	rm -f blugon.1.gz
