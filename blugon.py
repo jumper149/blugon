@@ -522,7 +522,7 @@ def main():
         while_body(current_minute)
         exit()
 
-    if FADE:
+    if FADE and (BACKEND != 'tty'):
         current_minute = get_minute()
         steps = FADE_STEPS
         sleep_time = FADE_DURATION / steps
