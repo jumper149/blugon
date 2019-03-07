@@ -79,7 +79,7 @@ COLOR_TABLE = {       # VGA colors from https://en.wikipedia.org/wiki/ANSI_escap
 
 #----------------------------------------------------------------------PARSER
 
-argparser = ArgumentParser(prog='blugon', description="A simple Blue Light Filter for X")
+argparser = ArgumentParser(prog='blugon', description='A simple Blue Light Filter for X')
 
 argparser.add_argument('-v', '--version', action='store_true',
         dest='version', help='print version and exit')
