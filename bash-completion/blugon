@@ -1,0 +1,53 @@
+#!/usr/bin/bash
+
+_blugon () {
+	local args opts
+	local cur prev
+
+	local backends backendopts
+
+
+	args=(
+		"--help"
+		"--version"
+		"--verbose"
+		"--printconfig"
+		"--once"
+		"--readcurrent"
+		"--setcurrent"
+		"--simulation"
+		"--fade"
+		"--interval"
+		"--configdir"
+		"--backend"
+		"--waitforx"
+	)
+
+	backends=(
+		"xgamma"
+		"scg"
+		"tty"
+	)
+
+	cur="${COMP_WORDS[COMP_CWORD]}"
+	prev="${COMP_WORDS[COMP_CWORD-1]}"
+	opts="${args[@]}"
+
+	backendopts="${backends[@]}"
+
+	if [[ "${prev}" == "-S" ]] || [[ "${prev}" == "--setcurrent" ]] ||
+		[[ "${prev}" == "-i" ]] || [[ "${prev}" == "--interval" ]]
+	then
+		# no completion
+		COMPREPLY=()
+	elif [[ "${prev}" == "-c" ]] || [[ "${prev}" == "--configdir" ]] ; then
+		# completes to directory
+		COMPREPLY=( $(compgen -d -- "${cur}") )
+	elif [[ "${prev}" == "-b" ]] || [[ "${prev}" == "--backend" ]] ; then
+		COMPREPLY=( $(compgen -W "${backendopts}" -- "${cur}") )
+	elif [[ "${cur}" == ""* ]] ; then
+		COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
+	fi
+}
+
+complete -F _blugon blugon

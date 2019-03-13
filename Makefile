@@ -11,6 +11,8 @@ install:
 	install -m755 blugon $(DESTDIR)$(PREFIX)/bin/blugon
 	install -d $(DESTDIR)$(PREFIX)/share/man/man1/
 	install -m644 blugon.1.gz $(DESTDIR)$(PREFIX)/share/man/man1/
+	install -d $(DESTDIR)$(PREFIX)/share/bash-completion/completions/
+	install -m644 bash-completion/blugon $(DESTDIR)$(PREFIX)/share/bash-completion/completions/blugon
 	install -d $(DESTDIR)$(PREFIX)/lib/systemd/user/
 	install -m644 systemd/user/blugon.service $(DESTDIR)$(PREFIX)/lib/systemd/user/
 	install -d $(DESTDIR)$(PREFIX)/lib/blugon/
