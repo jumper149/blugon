@@ -450,8 +450,8 @@ def call_backend(backend, r, g, b):
 
 def get_minute():
     """Returns the current minute"""
-    time_struct = time.localtime()
-    minute = 60 * time_struct.tm_hour + time_struct.tm_min + time_struct.tm_sec / 60
+    now = time.localtime()
+    minute = 60 * now.tm_hour + now.tm_min + now.tm_sec / 60
     verbose_print('Provide current minute ' + str(minute))
     return minute
 
@@ -462,11 +462,12 @@ def reprint_time(minute):
     print('\r' + str_hour + ':' + str_minute, end='')
     return
 
-def gamma_step(red_gamma, green_gamma, blue_gamma, max_step, step):
+def gamma_step(r, g, b, max_step, step):
     """Returns appropriate Gamma values for step considering fading"""
-    red = red_gamma + (NORMAL_RED - red_gamma) * ((max_step - step) / max_step)
-    green = green_gamma + (NORMAL_GREEN - green_gamma) * ((max_step - step) / max_step)
-    blue = blue_gamma + (NORMAL_BLUE - blue_gamma) * ((max_step - step) / max_step)
+    factor = ((max_step - step) / max_step)
+    red   = r + (NORMAL_RED   - r) * factor
+    green = g + (NORMAL_GREEN - g) * factor
+    blue  = b + (NORMAL_BLUE  - b) * factor
     return red, green, blue
 
 #----------------------------------------------------------------------SANITY
