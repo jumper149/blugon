@@ -404,7 +404,7 @@ def calc_gamma(minute, list_minutes, list_gamma):
     return red_gamma, green_gamma, blue_gamma
 
 def call_xgamma(r, g, b):
-    """Start a subprocess of backend xorg-xgamma"""
+    """Start a subprocess of backend xorg-xgamma from Gamma values"""
     def apply_boundaries(gamma):
         if gamma < 0.1:
             gamma = 0.1
@@ -416,12 +416,12 @@ def call_xgamma(r, g, b):
     return
 
 def call_scg(r, g, b):
-    """Start a subprocess of backend scg"""
+    """Start a subprocess of backend scg from Gamma values"""
     check_call([MAKE_INSTALL_PREFIX + '/lib/blugon/scg', str(r), str(g), str(b)])
     return
 
 def call_tty(r, g, b):
-    """Start a subprocess of backend tty"""
+    """Start a subprocess of backend tty from Gamma values"""
     def hex_tempered(i):
         color = COLOR_TABLE[i]
         def flt_to_hex(flt):
@@ -437,15 +437,15 @@ def call_tty(r, g, b):
     check_call([MAKE_INSTALL_PREFIX + '/lib/blugon/tty.sh'] + hex_list)
     return
 
-def call_backend(backend, red_gamma, green_gamma, blue_gamma):
-    """Wrapper to call various backends"""
+def call_backend(backend, r, g, b):
+    """Wrapper to call various backends from Gamma values"""
     verbose_print('Calling backend ' + backend)
     if backend == 'xgamma':
-        call_xgamma(red_gamma, green_gamma, blue_gamma)
+        call_xgamma(r, g, b)
     elif backend == 'scg':
-        call_scg(red_gamma, green_gamma, blue_gamma)
+        call_scg(r, g, b)
     elif backend == 'tty':
-        call_tty(red_gamma, green_gamma, blue_gamma)
+        call_tty(r, g, b)
     return
 
 def get_minute():
@@ -463,7 +463,7 @@ def reprint_time(minute):
     return
 
 def gamma_step(red_gamma, green_gamma, blue_gamma, max_step, step):
-    """Returns appropriate gamma values for step considering fading"""
+    """Returns appropriate Gamma values for step considering fading"""
     red = red_gamma + (NORMAL_RED - red_gamma) * ((max_step - step) / max_step)
     green = green_gamma + (NORMAL_GREEN - green_gamma) * ((max_step - step) / max_step)
     blue = blue_gamma + (NORMAL_BLUE - blue_gamma) * ((max_step - step) / max_step)
