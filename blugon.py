@@ -405,6 +405,13 @@ def calc_gamma(minute, list_minutes, list_gamma):
 
 def call_xgamma(red_gamma, green_gamma, blue_gamma):
     """Start a subprocess of backend xorg-xgamma"""
+    def apply_boundaries(gamma):
+        if gamma < 0.1:
+            gamma = 0.1
+        if gamma > 10.0:
+            gamma = 10.0
+        return gamma
+    red_gamma, green_gamma, blue_gamma = map(apply_boundaries, (red_gamma, green_gamma, blue_gamma))
     str_red_gamma = str(red_gamma)
     str_green_gamma = str(green_gamma)
     str_blue_gamma = str(blue_gamma)
