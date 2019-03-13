@@ -90,7 +90,7 @@ argparser.add_argument('-p', '--printconfig', action='store_true',
 argparser.add_argument('-o', '--once', action='store_true',
         dest='once', help='apply configuration for current time and exit')
 argparser.add_argument('-r', '--readcurrent', action='store_true',
-        dest='readcurrent', help='read temperature from '+CONFIG_DIR+'/current and exit')
+        dest='readcurrent', help='read temperature from '+CONFIG_DIR+'/current')
 argparser.add_argument('-S', '--setcurrent', nargs='?',
         dest='current_temp', type=str, help='set current temperature configuration, implies -r')
 argparser.add_argument('-s', '--simulation', action='store_true',
