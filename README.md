@@ -28,13 +28,6 @@ You can use the current-mode to manually control color temperature (with keybind
     blugon --setcurrent="+600"    # for more blue
     blugon --setcurrent="-600"    # for more red
 
-Append the following piece of code to your `~/.bashrc` to run blugon when you log into your TTY:
-
-    if [ "$TERM" = "linux" ]; then
-      blugon --once --backend="tty" && clear
-      (blugon --backend="tty")&
-    fi
-
 For further help you can use the `-h` flag or the more intensive man-page:
 
     man blugon
