@@ -403,7 +403,7 @@ def calc_gamma(minute, list_minutes, list_gamma):
             str(red_gamma) + ' ' +  str(green_gamma) + ' ' + str(blue_gamma))
     return red_gamma, green_gamma, blue_gamma
 
-def call_xgamma(red_gamma, green_gamma, blue_gamma):
+def call_xgamma(r, g, b):
     """Start a subprocess of backend xorg-xgamma"""
     def apply_boundaries(gamma):
         if gamma < 0.1:
@@ -411,24 +411,16 @@ def call_xgamma(red_gamma, green_gamma, blue_gamma):
         if gamma > 10.0:
             gamma = 10.0
         return gamma
-    red_gamma, green_gamma, blue_gamma = map(apply_boundaries, (red_gamma, green_gamma, blue_gamma))
-    str_red_gamma = str(red_gamma)
-    str_green_gamma = str(green_gamma)
-    str_blue_gamma = str(blue_gamma)
-    check_call(['xgamma', '-quiet', '-rgamma', str_red_gamma,
-        '-ggamma', str_green_gamma, '-bgamma', str_blue_gamma])
+    r, g, b = map(apply_boundaries, (r, g, b))
+    check_call(['xgamma', '-quiet', '-rgamma', str(r), '-ggamma', str(g), '-bgamma', str(b)])
     return
 
-def call_scg(red_gamma, green_gamma, blue_gamma):
+def call_scg(r, g, b):
     """Start a subprocess of backend scg"""
-    str_red_gamma = str(red_gamma)
-    str_green_gamma = str(green_gamma)
-    str_blue_gamma = str(blue_gamma)
-    check_call([MAKE_INSTALL_PREFIX + '/lib/blugon/scg',
-        str_red_gamma, str_green_gamma, str_blue_gamma])
+    check_call([MAKE_INSTALL_PREFIX + '/lib/blugon/scg', str(r), str(g), str(b)])
     return
 
-def call_tty(red_gamma, green_gamma, blue_gamma):
+def call_tty(r, g, b):
     """Start a subprocess of backend tty"""
     def hex_tempered(i):
         color = COLOR_TABLE[i]
@@ -436,9 +428,9 @@ def call_tty(red_gamma, green_gamma, blue_gamma):
             if flt > 255:
                 flt = 255
             return format(int(flt), 'x')
-        hex_r = flt_to_hex(red_gamma * int(color[0:2], 16))
-        hex_g = flt_to_hex(green_gamma * int(color[2:4], 16))
-        hex_b = flt_to_hex(blue_gamma * int(color[4:6], 16))
+        hex_r = flt_to_hex(r * int(color[0:2], 16))
+        hex_g = flt_to_hex(g * int(color[2:4], 16))
+        hex_b = flt_to_hex(b * int(color[4:6], 16))
         string = format(i, 'X') + hex_r + hex_g + hex_b
         return string
     hex_list = [ hex_tempered(i) for i in range(16) ]
