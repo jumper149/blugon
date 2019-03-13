@@ -356,10 +356,10 @@ def set_current():
         temp = CURRENT_TEMP
 
     if temp < MIN_CURRENT_TEMP:
-        verbose_print('Temperature wanted to be set capped at minimum ' + str(MIN_CURRENT_TEMP))
+        verbose_print('Temperature capped at minimum ' + str(MIN_CURRENT_TEMP))
         temp = MIN_CURRENT_TEMP
     elif temp > MAX_CURRENT_TEMP:
-        verbose_print('Temperature wanted to be set capped at maximum ' + str(MAX_CURRENT_TEMP))
+        verbose_print('Temperature capped at maximum ' + str(MAX_CURRENT_TEMP))
         temp = MAX_CURRENT_TEMP
 
     verbose_print('Writing temperature ' + str(temp) +
@@ -465,22 +465,20 @@ def reprint_time(minute):
 def gamma_step(r, g, b, max_step, step):
     """Returns appropriate Gamma values for step considering fading"""
     factor = ((max_step - step) / max_step)
-    red   = r + (NORMAL_RED   - r) * factor
-    green = g + (NORMAL_GREEN - g) * factor
-    blue  = b + (NORMAL_BLUE  - b) * factor
-    return red, green, blue
-
-#----------------------------------------------------------------------SANITY
-
-if (not DISPLAY) and (BACKEND != 'tty'):
-    verbose_print('DISPLAY environment variable not set')
-    if WAIT_FOR_X:
-        time.sleep(SLEEP_AFTER_FAILED_STARTUP)
-    exit(11)
+    r = r + (NORMAL_RED   - r) * factor
+    g = g + (NORMAL_GREEN - g) * factor
+    b = b + (NORMAL_BLUE  - b) * factor
+    return r, g, b
 
 #----------------------------------------------------------------------MAIN
 
 def main():
+    if (not DISPLAY) and (BACKEND != 'tty'):
+        verbose_print('DISPLAY environment variable not set')
+        if WAIT_FOR_X:
+            time.sleep(SLEEP_AFTER_FAILED_STARTUP)
+        exit(11)
+
     if CURRENT_TEMP:
         set_current()
 
