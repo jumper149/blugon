@@ -35,19 +35,30 @@ _blugon () {
 
 	backendopts="${backends[@]}"
 
-	if [[ "${prev}" == "-S" ]] || [[ "${prev}" == "--setcurrent" ]] ||
-		[[ "${prev}" == "-i" ]] || [[ "${prev}" == "--interval" ]]
-	then
-		# no completion
-		COMPREPLY=()
-	elif [[ "${prev}" == "-c" ]] || [[ "${prev}" == "--configdir" ]] ; then
-		# completes to directory
-		COMPREPLY=( $(compgen -d -- "${cur}") )
-	elif [[ "${prev}" == "-b" ]] || [[ "${prev}" == "--backend" ]] ; then
-		COMPREPLY=( $(compgen -W "${backendopts}" -- "${cur}") )
-	elif [[ "${cur}" == ""* ]] ; then
-		COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
-	fi
+	case "${prev}" in
+		"-S"|"--setcurrent")
+			COMPREPLY=()
+			;;
+		"-i"|"--interval")
+			COMPREPLY=()
+			;;
+		"-c"|"--configdir")
+			COMPREPLY=( $(compgen -d -- "${cur}") )
+			;;
+		"-b"|"--backend")
+			COMPREPLY=( $(compgen -W "${backendopts}" -- "${cur}") )
+			;;
+		*)
+			case "${cur}" in
+				"--"*)
+					COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
+					;;
+				*)
+					COMPREPLY=()
+					;;
+			esac
+			;;
+	esac
 }
 
 complete -F _blugon blugon
