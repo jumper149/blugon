@@ -1,2 +1,4 @@
-- examples in readme
 - remove deprecated '--config' flag for '--configdir'
+- examples in readme
+- dependencies in general (not archlinux) style
+- create current file on the fly instead of exception
