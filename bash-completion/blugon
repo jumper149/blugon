@@ -8,19 +8,19 @@ _blugon () {
 
 
 	args=(
-		"--help"
-		"--version"
-		"--verbose"
-		"--printconfig"
-		"--once"
-		"--readcurrent"
-		"--setcurrent"
-		"--simulation"
-		"--fade"
-		"--interval"
-		"--configdir"
-		"--backend"
-		"--waitforx"
+		"-h" "--help"
+		"-v" "--version"
+		"-V" "--verbose"
+		"-p" "--printconfig"
+		"-o" "--once"
+		"-r" "--readcurrent"
+		"-S" "--setcurrent"
+		"-s" "--simulation"
+		"-f" "--fade"
+		"-i" "--interval"
+		"-c" "--configdir"
+		"-b" "--backend"
+		"-w" "--waitforx"
 	)
 
 	backends=(
@@ -50,7 +50,7 @@ _blugon () {
 			;;
 		*)
 			case "${cur}" in
-				"--"*)
+				"-"*)
 					COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
 					;;
 				*)
