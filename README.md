@@ -76,3 +76,8 @@ To change the target directory of the installation use the following and change 
     make install PREFIX=/usr/local
 
 Configuration is supposed to be done after installing.
+
+## Contributing
+Feel free to Fork, create Issues and make Pull Requests.
+
+I am looking forward to finding Package Maintainers and will happily accept improvements in the source code.
