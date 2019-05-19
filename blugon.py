@@ -12,7 +12,7 @@ MAKE_INSTALL_PREFIX = '/usr'
 
 #----------------------------------------------------------------------DEFAULTS
 
-VERSION = '1.11.2'
+VERSION = '1.11.3'
 
 VERBOSE = False
 
