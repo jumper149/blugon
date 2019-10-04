@@ -6,6 +6,7 @@ import time
 import math
 from subprocess import check_call
 from os import getenv
+from os import path
 from sys import stdout
 
 MAKE_INSTALL_PREFIX = '/usr'
@@ -168,6 +169,11 @@ confparser['tty'] = {
 if args.printconfig:
     confparser.write(stdout)
     exit()
+
+if not path.exists(CONFIG_DIR):
+    raise ValueError('configuration directory does not exist: ' + CONFIG_DIR +
+            '\n\n' + 'To create this directory use:\n' +
+            '    mkdir ' + CONFIG_DIR)
 
 confparser.read(CONFIG_FILE_CONFIG)
 
