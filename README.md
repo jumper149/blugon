@@ -1,5 +1,5 @@
 # blugon
-**A simple Blue Light Filter for X**
+**A simple and configurable Blue Light Filter for X**
 
 blugon is a simple and fast Blue Light Filter, that is highly configurable and provides a command line interface.
 The program can be run just once or as a daemon (manually or via systemd).
