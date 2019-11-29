@@ -63,8 +63,13 @@ To use the default configuration as a template you can use:
 - `xorg-xgamma` as backend
 
 ## Install
-For ArchLinux users I am maintaining an [AUR-Package](https://aur.archlinux.org/packages/blugon).
+### ArchLinux
+There is an [AUR-Package](https://aur.archlinux.org/packages/blugon).
 
+### Nix
+You can use the derivation from this [nix-expression](https://github.com/NixOS/nixpkgs/blob/55f4feb618f3178b7a384eaa914be2bef621af3e/pkgs/applications/misc/blugon/default.nix) in [nixpkgs](https://github.com/NixOS/nixpkgs).
+
+### from source
 If you are on Linux you can build and install:
 
     make
