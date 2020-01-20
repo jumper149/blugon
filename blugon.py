@@ -433,7 +433,7 @@ def call_tty(r, g, b):
         def flt_to_hex(flt):
             if flt > 255:
                 flt = 255
-            return format(int(flt), 'x')
+            return format(int(flt), '0=2x')
         hex_r = flt_to_hex(r * int(color[0:2], 16))
         hex_g = flt_to_hex(g * int(color[2:4], 16))
         hex_b = flt_to_hex(b * int(color[4:6], 16))
