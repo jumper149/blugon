@@ -9,6 +9,18 @@ blugon calculates the screen color from your local time and configuration.
 ![blugon-comparison](https://github.com/jumper149/data/blob/master/blugon/comp.png?raw=true)
 ![blugon-simulation](https://github.com/jumper149/data/blob/master/blugon/sim.gif?raw=true)
 
+### Comparison to other Blue Light Filters
+
+blugon's main feature is the ability to control gamma values or color temperature at specific times of day.
+
+|                            | blugon                      | [Redshift](https://github.com/jonls/redshift) | [f.lux](https://justgetflux.com/) |
+|---------------------------:|:----------------------------|:----------------------------------------------|:----------------------------------|
+| written in                 | Python                      | C                                             | closed source                     |
+| interface                  | CLI                         | CLI or GUI                                    | GUI                               |
+| timing configuration       | user defined                | day and night                                 | day and night                     |
+| gamma configuration        | RGB values or temperature   | temperature                                   | temperature                       |
+| brightness configuration   | none                        | none                                          | none                              |
+
 ## Usage
 You can start blugon from the command line:
 
