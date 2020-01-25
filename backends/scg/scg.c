@@ -49,6 +49,8 @@ int main(int argc, char **argv) {
 
 		XFree(crtc_gamma);
 	}
+        XRRFreeScreenResources(res);
+        XCloseDisplay(dpy);
 	return 0;
 }
 
