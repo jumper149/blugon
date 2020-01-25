@@ -8,6 +8,11 @@
 
 int main(int argc, char **argv) {
 	Display *dpy = XOpenDisplay(NULL);
+
+        if(dpy == NULL) {
+            return 12;    // exit code 12, if no display is found
+        }
+
 	int screen = DefaultScreen(dpy);
 	Window root = RootWindow(dpy, screen);
 
