@@ -8,6 +8,11 @@
 
 int main(int argc, char **argv) {
 	Display *dpy = XOpenDisplay(NULL);
+
+        if(dpy == NULL) {
+            return 12;    // exit code 12, if no display is found
+        }
+
 	int screen = DefaultScreen(dpy);
 	Window root = RootWindow(dpy, screen);
 
@@ -29,7 +34,6 @@ int main(int argc, char **argv) {
 	int num_crtcs = res->ncrtc;
 	for (int c = 0; c < res->ncrtc; c++) {
 		int crtcxid = res->crtcs[c];
-		XRRCrtcInfo *crtc_info = XRRGetCrtcInfo(dpy, res, crtcxid);
 
 		int size = XRRGetCrtcGammaSize(dpy, crtcxid);
 
@@ -45,6 +49,8 @@ int main(int argc, char **argv) {
 
 		XFree(crtc_gamma);
 	}
+        XRRFreeScreenResources(res);
+        XCloseDisplay(dpy);
 	return 0;
 }
 
