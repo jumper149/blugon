@@ -4,35 +4,22 @@
 #include <X11/Xlib.h>
 #include <X11/extensions/Xrandr.h>
 
-char *argv0 = "scg";
-
-#define usage() fprintf(stderr, "usage: %s GAMMA_R GAMMA_G GAMMA_B\n", argv0)
-
-#define die() do { usage(); exit(EXIT_FAILURE); } while (0)
-
-double parse_arg(const char *arg)
-{
+double parse_arg(const char *arg) {
     errno = 0;
     double gamma = strtod(arg, NULL);
     if (errno) {
         perror("strtod");
-        die();
-    }
-
-    if (gamma < 0.0 || gamma > 1.0) {
-        fprintf(stderr, "gamma values must be in 0.0 .. 1.0\n");
-        die();
+        exit(EXIT_FAILURE);
     }
 
     return gamma;
 }
 
-int main(int argc, char **argv)
-{
-    argv0 = argv[0];
+int main(int argc, char **argv) {
+    char *argv0 = argv[0];
 
     if (argc != 4) {
-        die();
+        exit(EXIT_FAILURE);
     }
 
     double gamma_r = parse_arg(argv[1]);
