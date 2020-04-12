@@ -5,7 +5,7 @@ After=graphical-session.target
 
 [Service]
 Type=simple
-ExecStart=/usr/bin/blugon --waitforx
+ExecStart=MAKE_INSTALL_PREFIX/bin/blugon --waitforx
 RestartForceExitStatus=11
 RestartSec=0
 
