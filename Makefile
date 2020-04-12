@@ -4,7 +4,7 @@ build:
 	sed "s|MAKE_INSTALL_PREFIX = '.*'|MAKE_INSTALL_PREFIX = '$(PREFIX)'|g" blugon.py > blugon
 	sed "s|MAKE_INSTALL_PREFIX|$(PREFIX)|g" systemd/user/blugon.service > blugon.service
 	gcc -std=c99 -O2 -I /usr/X11R6/include -o backends/scg/scg backends/scg/scg.c -L /usr/X11R6/lib -lm -lX11 -lXrandr
-	gzip --force --keep blugon.1
+	gzip --best --force --keep blugon.1
 
 install:
 	install -D -m755 blugon $(PREFIX)/bin/blugon
