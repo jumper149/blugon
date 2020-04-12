@@ -16,8 +16,6 @@ double parse_arg(const char *arg) {
 }
 
 int main(int argc, char **argv) {
-    char *argv0 = argv[0];
-
     if (argc != 4) {
         exit(EXIT_FAILURE);
     }
