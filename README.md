@@ -1,4 +1,5 @@
 # blugon
+
 **A simple and configurable Blue Light Filter for X**
 
 blugon is a simple and fast Blue Light Filter, that is highly configurable and provides a command line interface.
@@ -22,6 +23,7 @@ blugon's main feature is the ability to control gamma values or color temperatur
 | brightness configuration | none                      | none                                          | none                              |
 
 ## Usage
+
 You can start blugon from the command line:
 
     blugon
@@ -45,6 +47,7 @@ For further help you can use the `-h` flag or the more intensive man-page:
     man blugon
 
 ### Options:
+
 - `-o` or `--once` to apply gamma values of the current time
 - `-S` or `--setcurrent` to set or change the current color temperature
 - `-s` or `--simulation` to quickly simulate the configuration for the whole day
@@ -54,11 +57,13 @@ For further help you can use the `-h` flag or the more intensive man-page:
 - `-b [backend]` or `--backend=[backend]` to choose the backend for communication with X
 
 ### available backends:
+
 - `xgamma` - most compatible, requires optional dependency
 - `scg` - best result
 - `tty` - to run blugon on your TTY
 
 ## Configuration
+
 Examples for configurations can be found in `/usr/share/blugon/configs/`.
 
 To use the default configuration as a template you can use:
@@ -68,17 +73,23 @@ To use the default configuration as a template you can use:
     blugon --printconfig > ~/.config/blugon/config
 
 ## Dependencies
+
 - `python`
 - `libx11`
 - `libxrandr`
+
 ### optional:
+
 - `xorg-xgamma` as backend
 
 ## Install
+
 ### ArchLinux
+
 There is an [AUR-Package](https://aur.archlinux.org/packages/blugon).
 
 ### Debian
+
     $ git clone https://github.com/jumper149/blugon.git
     $ sudo apt install gcc make python3 libx11-dev libxrandr-dev
     $ cd blugon/
@@ -86,9 +97,11 @@ There is an [AUR-Package](https://aur.archlinux.org/packages/blugon).
     $ sudo make install PREFIX=/usr/local
 
 ### Nix
+
 You can use the derivation from this [nix-expression](https://github.com/NixOS/nixpkgs/blob/55f4feb618f3178b7a384eaa914be2bef621af3e/pkgs/applications/misc/blugon/default.nix) in [nixpkgs](https://github.com/NixOS/nixpkgs).
 
 ### from source
+
 If you are on Linux you can build and install:
 
     make
@@ -102,6 +115,7 @@ To change the target directory of the installation use the following and change 
 Configuration is supposed to be done after installing.
 
 ## Contributing
+
 Feel free to Fork, create Issues and make Pull Requests.
 
 I am looking forward to finding Package Maintainers and will happily accept improvements in the source code.
