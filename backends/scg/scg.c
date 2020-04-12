@@ -25,7 +25,6 @@ int main(int argc, char **argv) {
         return 1;
     }
 
-    int num_crtcs = res->ncrtc;
     for (int c = 0; c < res->ncrtc; c++) {
         int crtcxid = res->crtcs[c];
 
