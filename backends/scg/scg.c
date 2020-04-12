@@ -26,7 +26,7 @@ int main(int argc, char **argv) {
     }
 
     for (int c = 0; c < res->ncrtc; c++) {
-        int crtcxid = res->crtcs[c];
+        RRCrtc crtcxid = res->crtcs[c];
 
         int size = XRRGetCrtcGammaSize(dpy, crtcxid);
         XRRCrtcGamma *crtc_gamma = XRRAllocGamma(size);
