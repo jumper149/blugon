@@ -39,7 +39,7 @@ int main(int argc, char **argv) {
         }
         XRRSetCrtcGamma(dpy, crtcxid, crtc_gamma);
 
-        XFree(crtc_gamma);
+        XRRFreeGamma(crtc_gamma);
     }
 
     XRRFreeScreenResources(res);
