@@ -78,6 +78,13 @@ To use the default configuration as a template you can use:
 ### ArchLinux
 There is an [AUR-Package](https://aur.archlinux.org/packages/blugon).
 
+### Debian
+    $ git clone https://github.com/jumper149/blugon.git
+    $ sudo apt install gcc make python3 libx11-dev libxrandr-dev
+    $ cd blugon/
+    $ make PREFIX=/usr/local
+    $ sudo make install PREFIX=/usr/local
+
 ### Nix
 You can use the derivation from this [nix-expression](https://github.com/NixOS/nixpkgs/blob/55f4feb618f3178b7a384eaa914be2bef621af3e/pkgs/applications/misc/blugon/default.nix) in [nixpkgs](https://github.com/NixOS/nixpkgs).
 
