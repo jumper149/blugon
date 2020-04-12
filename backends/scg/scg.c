@@ -1,10 +1,6 @@
-#include <X11/Xlib.h>
-#include <X11/Xproto.h>
-#include <X11/Xatom.h>
-#include <X11/extensions/Xrandr.h>
-
 #include <stdlib.h>
-#include <math.h>
+#include <X11/Xlib.h>
+#include <X11/extensions/Xrandr.h>
 
 int main(int argc, char **argv) {
     Display *dpy = XOpenDisplay(NULL);
