@@ -2,11 +2,11 @@
 #include <X11/Xlib.h>
 #include <X11/extensions/Xrandr.h>
 
-int main(int argc, char **argv) {
+int main(int argc, char **argv)
+{
     Display *dpy = XOpenDisplay(NULL);
-
-    if(dpy == NULL) {
-        return 12;    // exit code 12, if no display is found
+    if (dpy == NULL) {
+        return 12; // exit code 12, if no display is found
     }
 
     Window root = XDefaultRootWindow(dpy);
@@ -21,14 +21,13 @@ int main(int argc, char **argv) {
         gamma_r = atof(argv[1]);
         gamma_g = atof(argv[2]);
         gamma_b = atof(argv[3]);
-    }else {
+    } else {
         return 1;
     }
 
     for (int c = 0; c < res->ncrtc; c++) {
-        RRCrtc crtcxid = res->crtcs[c];
-
-        int size = XRRGetCrtcGammaSize(dpy, crtcxid);
+        RRCrtc crtc = res->crtcs[c];
+        int size = XRRGetCrtcGammaSize(dpy, crtc);
         XRRCrtcGamma *crtc_gamma = XRRAllocGamma(size);
 
         for (int i = 0; i < size; i++) {
@@ -37,8 +36,8 @@ int main(int argc, char **argv) {
             crtc_gamma->green[i] = g * gamma_g;
             crtc_gamma->blue[i]  = g * gamma_b;
         }
-        XRRSetCrtcGamma(dpy, crtcxid, crtc_gamma);
 
+        XRRSetCrtcGamma(dpy, crtc, crtc_gamma);
         XRRFreeGamma(crtc_gamma);
     }
 
