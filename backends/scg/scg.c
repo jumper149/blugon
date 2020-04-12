@@ -9,8 +9,7 @@ int main(int argc, char **argv) {
         return 12;    // exit code 12, if no display is found
     }
 
-    int screen = DefaultScreen(dpy);
-    Window root = RootWindow(dpy, screen);
+    Window root = XDefaultRootWindow(dpy);
     XRRScreenResources *res = XRRGetScreenResourcesCurrent(dpy, root);
 
     double gamma_r;
