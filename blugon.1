@@ -20,6 +20,7 @@ blugon \- simple Blue Light Filter for X
 .RB [\|\-b
 .IR backend \|]
 .RB [\|\-w\|]
+.RB [\|\-d\|]
 
 .SH DESCRIPTION
 blugon is a simple blue light filter that uses xgamma as a backed and is configured in "$XDG_CONFIG_HOME/blugon/" or "$HOME/.config/blugon/" as fallback.
@@ -117,6 +118,10 @@ Available backends are:
 .B \-w, \-\-waitforx
 Instead of crashing when the backend fails the program will continue.
 This is automatically used by the systemd service to prevent failing when switching to another TTY.
+.TP
+.B \-d, \-\-disable
+Turn off blue filter and exit.
+Works if other instances of blugon're not running.
 
 .SH EXAMPLES
 To just apply the blue filter and then exit use:
