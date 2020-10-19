@@ -21,7 +21,8 @@ _blugon () {
 		"-c" "--configdir"
 		"-b" "--backend"
 		"-w" "--waitforx"
-	)
+        "-d" "--disable"	
+    )
 
 	backends=(
 		"xgamma"

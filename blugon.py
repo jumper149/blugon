@@ -106,6 +106,8 @@ argparser.add_argument('-b', '--backend', nargs='?',
         dest='backend', type=str, help='set backend (default: '+BACKEND+')')
 argparser.add_argument('-w', '--waitforx', action='store_true',
         dest='wait_for_x', help='continue when backend fails')
+argparser.add_argument('-d', '--disable', action='store_true',
+        dest='disable', help='turn off blue filter')
 
 args = argparser.parse_args()
 
@@ -182,6 +184,7 @@ confs = confparser['main']
 #----------------------------------------------------------------------ARGUMENTS
 
 ONCE = args.once
+DISABLE = args.disable
 
 MIN_CURRENT_TEMP = confparser['current'].getfloat('min_temp')
 MAX_CURRENT_TEMP = confparser['current'].getfloat('max_temp')
@@ -547,10 +550,16 @@ def main():
                 call_backend(BACKEND, red_gamma, green_gamma, blue_gamma)
             time.sleep(sleep_time)
 
+    if DISABLE:
+        try:
+            call_backend(BACKEND, 1, 1, 1) 
+        except:
+            verbose_print('X-server not found, cancel fading')
+        return
+
     if ONCE:
         while_body(get_minute(), 0)
         exit()
-
 
     while True :
         while_body(get_minute(), INTERVAL)
