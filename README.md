@@ -101,3 +101,9 @@ Configuration is supposed to be done after installing.
 Feel free to Fork, create Issues and make Pull Requests.
 
 I am looking forward to finding Package Maintainers and will happily accept improvements in the source code.
+
+## blucontrol
+A lot of functionality is being rewritten in [blucontrol](https://github.com/jumper149/blucontrol).
+If you have some Haskell knowledge feel free to try it out.
+
+What it provides is fully functional, just the documentation is lacking.
