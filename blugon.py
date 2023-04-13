@@ -106,6 +106,8 @@ argparser.add_argument('-b', '--backend', nargs='?',
         dest='backend', type=str, help='set backend (default: '+BACKEND+')')
 argparser.add_argument('-w', '--waitforx', action='store_true',
         dest='wait_for_x', help='continue when backend fails')
+argparser.add_argument('-O', '--output', nargs='?',
+        dest='output', help='operate on a specific output')
 
 args = argparser.parse_args()
 
@@ -206,6 +208,10 @@ if args.backend:
     BACKEND = args.backend
 if not BACKEND in BACKEND_LIST:
     raise ValueError('backend not found, choose from:\n    ' + '\n    '.join(BACKEND_LIST))
+
+OUTPUT = confs.get('output')
+if args.output:
+    OUTPUT = args.output
 
 WAIT_FOR_X = confs.getboolean('wait_for_x')
 if args.wait_for_x:
@@ -423,7 +429,10 @@ def call_xgamma(r, g, b):
 
 def call_scg(r, g, b):
     """Start a subprocess of backend scg from Gamma values"""
-    check_call([MAKE_INSTALL_PREFIX + '/lib/blugon/scg', str(r), str(g), str(b)])
+    argv = [MAKE_INSTALL_PREFIX + '/lib/blugon/scg', str(r), str(g), str(b)]
+    if (OUTPUT):
+        argv.append(OUTPUT)
+    check_call(argv)
     return
 
 def call_tty(r, g, b):
